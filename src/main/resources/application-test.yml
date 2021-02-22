@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    #url: jdbc:h2:file:~/Documentos/projeto-integrado/database/db_temp
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  app-url: "http://localhost:4200"
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true

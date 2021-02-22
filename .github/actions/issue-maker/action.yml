@@ -1,0 +1,18 @@
+name: "Criador de issues"
+description: "Automatização de criação de issues rotineiras"
+
+inputs:
+    issue-title:
+        description: "Titulo da issue"
+        required: true
+        default: "Issue"
+    issue-body:
+        description: "Corpo da issue"
+        required: true
+        default: "Issue Body"
+    repo-token:
+        description: "Token para realização de operações em repositório"
+
+runs:
+    using: "node12"
+    main: "dist/index.js"

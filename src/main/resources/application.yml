@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: local
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${env.PETSHOW_MAIL}
+    password: ${env.PETSHOW_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
