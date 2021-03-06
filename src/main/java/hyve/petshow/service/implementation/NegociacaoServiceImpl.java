@@ -29,7 +29,8 @@ public class NegociacaoServiceImpl implements NegociacaoService {
 	public Negociacao criaNegociacao(Long idAgendamento, Long idDono, Negociacao negociacao)
 			throws BusinessException, NotFoundException {
 		var agendamento = agendamentoService.buscarPorId(idAgendamento, idDono);
-		negociacao.setAgendamento(agendamento);
+		negociacao.setIdAgendamento(agendamento.getId());
+		negociacao.setPrecoInicial(agendamento.getPrecoFinal());
 		negociacao.setAuditoria(geraAuditoriaInsercao(Optional.ofNullable(idDono)));
 		return repository.save(negociacao);
 	}
@@ -38,7 +39,7 @@ public class NegociacaoServiceImpl implements NegociacaoService {
 	public Negociacao atualizaNegociacao(Long idNegociacao, Negociacao atualizacao)
 			throws BusinessException, NotFoundException {
 		var negociacao = buscaPorId(idNegociacao);
-		negociacao.setPrecoFinal(atualizacao.getPrecoFinal());
+		negociacao.setPrecoInicial(atualizacao.getPrecoInicial());
 		negociacao.setRespostaOferta(atualizacao.getRespostaOferta());
 		negociacao.setAuditoria(atualizaAuditoria(negociacao.getAuditoria(), ATIVO));
 		return repository.save(negociacao);

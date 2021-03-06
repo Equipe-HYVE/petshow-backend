@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NegociacaoRepresentation {
 	private Long id;
-	private BigDecimal precoFinal;
+	private BigDecimal precoOferta;
 	private BigDecimal precoInicial;
-	private String respostaOferta;
-	private AgendamentoRepresentation agendamento;
+	private Boolean respostaOferta;
+	private Long agendamentoId;
 }
