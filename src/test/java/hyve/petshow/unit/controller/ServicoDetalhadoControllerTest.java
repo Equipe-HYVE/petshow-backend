@@ -100,7 +100,7 @@ public class ServicoDetalhadoControllerTest {
 				.buscarServicosDetalhadosPorIds(anyList());
 		doReturn(adicionalRepresentation).when(servicoDetalhadoFacade)
 				.atualizarAdicional(anyLong(), anyLong(), anyLong(), any(AdicionalRepresentation.class));
-		doReturn(mensagemRepresentation).when(servicoDetalhadoFacade).desativarAdicional(anyLong(), anyLong(), anyLong());
+		doReturn(mensagemRepresentation).when(servicoDetalhadoFacade).desativarAdicional(anyLong(), anyLong(), anyLong(), anyBoolean());
 		doReturn(servicoDetalhadoTipoAnimalEstimacao)
 				.when(servicoDetalhadoTipoAnimalEstimacaoConverter).toDomain(any(PrecoPorTipoRepresentation.class));
 		doReturn(precoPorTipoRepresentation).when(servicoDetalhadoTipoAnimalEstimacaoConverter)
@@ -178,17 +178,17 @@ public class ServicoDetalhadoControllerTest {
 		};
 		var expected = ResponseEntity.ok(adicionais);
 
-		doReturn(adicionais).when(servicoDetalhadoFacade).buscarAdicionais(anyLong(), anyLong());
+		doReturn(adicionais).when(servicoDetalhadoFacade).buscarAdicionais(anyLong(), anyLong(), anyBoolean());
 
-		var busca = controller.buscarAdicionais(1l, 1l);
+		var busca = controller.buscarAdicionais(1l, 1l, Boolean.TRUE);
 
 		assertEquals(expected, busca);
 	}
 
 	@Test
 	public void deve_retornar_excecao_ao_nao_encontrar_servicos() throws Exception {
-		doThrow(NotFoundException.class).when(servicoDetalhadoFacade).buscarAdicionais(anyLong(), anyLong());
-		assertThrows(NotFoundException.class, () -> controller.buscarAdicionais(1l, 1l));
+		doThrow(NotFoundException.class).when(servicoDetalhadoFacade).buscarAdicionais(anyLong(), anyLong(), anyBoolean());
+		assertThrows(NotFoundException.class, () -> controller.buscarAdicionais(1l, 1l, Boolean.TRUE));
 	}
 
 	@Test
@@ -234,7 +234,7 @@ public class ServicoDetalhadoControllerTest {
 
 	@Test
 	public void deve_desativar_adicional() throws Exception {
-		var actual = controller.desativarAdicional(1L, 1L, 1L);
+		var actual = controller.desativarAdicional(1L, 1L, 1L, Boolean.FALSE);
 		var expected = ResponseEntity.ok(mensagemRepresentation);
 
 		assertEquals(expected, actual);

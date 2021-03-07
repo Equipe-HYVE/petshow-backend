@@ -198,15 +198,6 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 			throw new NotFoundException(NENHUM_SERVICO_DETALHADO_ENCONTRADO);
 		}
 
-		/*TODO: ARRUMAR ESSES NEGOCIOS NAO MUITO LEGAIS*/
-		servicosDetalhados.get()
-				.forEach(servicoDetalhado -> {
-					servicoDetalhado.setAdicionais(
-							servicoDetalhado.getAdicionais().stream()
-									.filter(adicional -> adicional.getAuditoria().isAtivo())
-									.collect(Collectors.toList()));
-		});
-
 		return servicosDetalhados;
 	}
 

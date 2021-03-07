@@ -179,8 +179,10 @@ public class ServicoDetalhadoController {
 			@Parameter(description = "Id do prestador")
 			@PathVariable Long idPrestador,
 			@Parameter(description = "Id do Serviço")
-			@PathVariable Long idServico) throws Exception {
-		return ResponseEntity.ok(servicoDetalhadoFacade.buscarAdicionais(idPrestador, idServico));
+			@PathVariable Long idServico,
+			@Parameter(description = "Flag para verificar se deve-se buscar apenas adicionais ativos ou todos")
+			@RequestParam Boolean apenasAtivos) throws Exception {
+		return ResponseEntity.ok(servicoDetalhadoFacade.buscarAdicionais(idPrestador, idServico, apenasAtivos));
 	}
 
 	@Operation(summary = "Cria novo adicional para um serviço")
@@ -225,17 +227,19 @@ public class ServicoDetalhadoController {
 	}
 
 	@Operation(summary = "Deleta adicional de um serviço")
-	@DeleteMapping("/prestador/{idPrestador}/servico-detalhado/{idServico}/adicional/{idAdicional}")
-	public ResponseEntity<MensagemRepresentation> desativarAdicional(
+	@PatchMapping("/prestador/{idPrestador}/servico-detalhado/{idServico}/adicional/{idAdicional}")
+	public ResponseEntity<AdicionalRepresentation> desativarAdicional(
 			@Parameter(description = "Id do prestador")
 			@PathVariable Long idPrestador,
 			@Parameter(description = "Id do serviço")
 			@PathVariable Long idServico,
 			@Parameter(description = "Id do adicional")
-			@PathVariable Long idAdicional)
+			@PathVariable Long idAdicional,
+			@Parameter(description = "Status novo do adicional")
+			@RequestParam Boolean ativo)
 			throws Exception {
-		var mensagem = servicoDetalhadoFacade.desativarAdicional(idPrestador, idServico, idAdicional);
+		var representation = servicoDetalhadoFacade.desativarAdicional(idPrestador, idServico, idAdicional, ativo);
 
-		return ResponseEntity.ok(mensagem);
+		return ResponseEntity.ok(representation);
 	}
 }

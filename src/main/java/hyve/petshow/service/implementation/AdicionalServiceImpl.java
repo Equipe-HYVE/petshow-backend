@@ -27,8 +27,19 @@ public class AdicionalServiceImpl implements AdicionalService {
 	private AdicionalRepository repository;
 
 	@Override
-	public List<Adicional> buscarPorServicoDetalhado(Long idServico) throws Exception {
+	public List<Adicional> buscarAtivosPorServicoDetalhado(Long idServico) throws Exception {
 		var adicionais = repository.findByServicoDetalhadoIdAndAuditoriaFlagAtivo(idServico, ATIVO);
+
+		if (adicionais.isEmpty()) {
+			throw new NotFoundException(ADICIONAIS_NAO_ENCONTRADOS);
+		}
+
+		return adicionais;
+	}
+
+	@Override
+	public List<Adicional> buscarPorServicoDetalhado(Long idServico) throws Exception {
+		var adicionais = repository.findByServicoDetalhadoId(idServico);
 
 		if (adicionais.isEmpty()) {
 			throw new NotFoundException(ADICIONAIS_NAO_ENCONTRADOS);
@@ -41,10 +52,6 @@ public class AdicionalServiceImpl implements AdicionalService {
 	public Adicional buscarPorId(Long idAdicional) throws Exception {
 		var adicional = repository.findById(idAdicional)
 				.orElseThrow(() -> new NotFoundException(ADICIONAL_NAO_ENCONTRADO));
-
-		if(! adicional.getAuditoria().isAtivo()){
-			throw new NotFoundException(ADICIONAL_DESATIVADO);
-		}
 
 		return adicional;
 	}
@@ -84,17 +91,17 @@ public class AdicionalServiceImpl implements AdicionalService {
 	}
 
 	@Override
-	public Boolean desativarAdicional(Long idAdicional, Long idServico) throws Exception {
+	public Adicional desativarAdicional(Long idAdicional, Long idServico, Boolean ativo) throws Exception {
 		var adicional = buscarPorId(idAdicional);
 
 		if (adicional.getServicoDetalhadoId() != idServico) {
 			throw new BusinessException(ADICIONAL_SERVICO_DIVERGENTE);
 		}
 
-		adicional.setAuditoria(atualizaAuditoria(adicional.getAuditoria(), INATIVO));
-		repository.save(adicional);
+		adicional.setAuditoria(atualizaAuditoria(adicional.getAuditoria(), (ativo ? ATIVO : INATIVO)));
+		adicional = repository.save(adicional);
 
-		return ! adicional.getAuditoria().isAtivo();
+		return adicional;
 	}
 
 	@Override

@@ -7,7 +7,7 @@ import hyve.petshow.controller.filter.ServicoDetalhadoFilter;
 import hyve.petshow.controller.representation.AdicionalRepresentation;
 import hyve.petshow.controller.representation.MensagemRepresentation;
 import hyve.petshow.controller.representation.ServicoDetalhadoRepresentation;
-import hyve.petshow.domain.ServicoDetalhado;
+import hyve.petshow.domain.Adicional;
 import hyve.petshow.domain.ServicoDetalhadoTipoAnimalEstimacao;
 import hyve.petshow.exceptions.BusinessException;
 import hyve.petshow.exceptions.NotFoundException;
@@ -78,10 +78,11 @@ public class ServicoDetalhadoFacade {
         return representation;
     }
     
-    public List<AdicionalRepresentation> buscarAdicionais(Long prestadorId, Long servicoId) throws Exception {
+    public List<AdicionalRepresentation> buscarAdicionais(Long prestadorId, Long servicoId, Boolean apenasAtivos) throws Exception {
     	var prestador = prestadorService.buscarPorId(prestadorId);
     	var servicoDetalhado = servicoDetalhadoService.buscarPorPrestadorIdEServicoId(prestador.getId(), servicoId);
-    	var adicionais = adicionalService.buscarPorServicoDetalhado(servicoDetalhado.getId());
+        var adicionais = apenasAtivos ? adicionalService.buscarAtivosPorServicoDetalhado(servicoDetalhado.getId()) :
+                adicionalService.buscarPorServicoDetalhado(servicoDetalhado.getId());
 
     	return adicionalConverter.toRepresentationList(adicionais);
     }
@@ -119,17 +120,13 @@ public class ServicoDetalhadoFacade {
         return adicionalConverter.toRepresentation(response);
     }
 
-    public MensagemRepresentation desativarAdicional(Long idPrestador, Long idServico, Long idAdicional) throws Exception {
+    public AdicionalRepresentation desativarAdicional(Long idPrestador, Long idServico, Long idAdicional, Boolean ativo) throws Exception {
         var prestador = prestadorService.buscarPorId(idPrestador);
         var servico = servicoDetalhadoService.buscarPorPrestadorIdEServicoId(prestador.getId(), idServico);
+        var adicional = adicionalService.desativarAdicional(idAdicional, servico.getId(), ativo);
+        var representation = adicionalConverter.toRepresentation(adicional);
 
-        var response = adicionalService.desativarAdicional(idAdicional, servico.getId());
-
-        var mensagem = new MensagemRepresentation(idAdicional);
-
-        mensagem.setSucesso(response);
-
-        return mensagem;
+        return representation;
     }
 
     public ServicoDetalhadoRepresentation adicionarTipoAnimalAceito(Long id, Long prestadorId, Integer idTipoAnimal,

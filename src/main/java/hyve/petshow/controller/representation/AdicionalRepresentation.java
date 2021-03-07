@@ -17,4 +17,5 @@ public class AdicionalRepresentation {
 	private String descricao;
 	private BigDecimal preco;
 	private Long servicoDetalhadoId;
+	private Boolean ativo;
 }

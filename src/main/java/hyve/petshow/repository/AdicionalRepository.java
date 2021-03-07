@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface AdicionalRepository extends JpaRepository<Adicional, Long> {
 	List<Adicional> findByServicoDetalhadoIdAndAuditoriaFlagAtivo(Long idServico, String flagAtivo);
+	List<Adicional> findByServicoDetalhadoId(Long idServico);
 	List<Adicional> findByServicoDetalhadoIdAndIdInAndAuditoriaFlagAtivo(Long servicoDetalhadoId, List<Long> adicionaisIds, String flagAtivo);
 }
