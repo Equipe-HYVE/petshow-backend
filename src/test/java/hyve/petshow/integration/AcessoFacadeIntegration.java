@@ -26,7 +26,7 @@ import hyve.petshow.repository.AcessoRepository;
 import hyve.petshow.repository.EmpresaRepository;
 import hyve.petshow.repository.PrestadorRepository;
 
-//@Disabled("Destativado enquanto não funcionar em PRD")
+@Disabled("Destativado enquanto não funcionar em PRD")
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
