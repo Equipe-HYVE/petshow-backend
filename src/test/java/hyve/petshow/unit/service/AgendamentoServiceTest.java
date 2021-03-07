@@ -104,6 +104,7 @@ public class AgendamentoServiceTest {
 
     @Test
     public void deve_buscar_agendamento_por_id() throws NotFoundException, BusinessException {
+    	doReturn(Optional.ofNullable(agendamento)).when(repository).findByIdAndAuditoriaFlagAtivo(anyLong(), anyString());
         var actual = service.buscarPorIdAtivo(1L, 1L);
 
         assertEquals(agendamento, actual);
@@ -119,7 +120,7 @@ public class AgendamentoServiceTest {
 
     @Test
     public void deve_lancar_business_exception_caso_cliente_id_e_prestador_id_divergentes_ao_buscar_por_id(){
-        assertThrows(BusinessException.class, () ->
+        assertThrows(NotFoundException.class, () ->
                 service.buscarPorIdAtivo(1L, 2L));
     }
 
@@ -130,7 +131,7 @@ public class AgendamentoServiceTest {
         request.getAuditoria().setFlagAtivo(INATIVO);
 
         doReturn(request).when(repository).save(any(Agendamento.class));
-
+        doReturn(Optional.of(criaAgendamento())).when(repository).findByIdAndAuditoriaFlagAtivo(anyLong(), anyString());
         var actual = service.atualizarAgendamento(1L, 1L, request);
 
         assertNotEquals(agendamento, actual);
@@ -146,7 +147,7 @@ public class AgendamentoServiceTest {
         agendamentoResponse.setAuditoria(atualizaAuditoria(agendamentoResponse.getAuditoria(),INATIVO));
 
         doReturn(agendamentoResponse).when(repository).save(any(Agendamento.class));
-
+        doReturn(Optional.ofNullable(agendamentoResponse)).when(repository).findByIdAndAuditoriaFlagAtivo(anyLong(), anyString());
         var actual = service.atualizarStatusAgendamento(1L, 1L, request);
 
         assertNotEquals(agendamento, actual);

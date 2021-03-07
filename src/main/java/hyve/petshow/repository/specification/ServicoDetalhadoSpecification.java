@@ -30,6 +30,7 @@ public class ServicoDetalhadoSpecification {
             var adicionais = root.join("adicionais", JoinType.LEFT);
             var tiposAnimaisAceitos = root.join("tiposAnimaisAceitos", JoinType.LEFT);
             var prestador = subQueryPrestador.from(Prestador.class);
+            prestador.join("empresa", JoinType.LEFT);
 
             predicate = builder.and(predicate, builder.equal(root.get("auditoria").get("flagAtivo"), ATIVO));
             predicate = builder.and(predicate, builder.equal(servico.get("id"), filtragem.getTipoServicoId()));
@@ -108,19 +109,21 @@ public class ServicoDetalhadoSpecification {
     		var geolocPositiva = geraGeolocalizacaoPositiva(filtragem.getPosicaoAtual(), filtragem.getMetrosGeoloc());
     		var geolocNegativa = geraGeolocalizacaoNegativa(filtragem.getPosicaoAtual(), filtragem.getMetrosGeoloc());
     		
-    		predicate = builder.and(predicate, builder.equal(
-                    queryPrestador
-                            .select(prestador.get("id"))
-                            .where(builder.and(
-                                    builder.between(
-                                            prestador.get("geolocalizacao").get("geolocLongitude"),
-                                            geolocPositiva.getGeolocLongitude(),
-                                            geolocNegativa.getGeolocLongitude())),
-                                    builder.between(
-                                            prestador.get("geolocalizacao").get("geolocLatitude"),
-                                            geolocPositiva.getGeolocLatitude(),
-                                            geolocNegativa.getGeolocLatitude())),
-                    root.get("prestadorId")));
+			predicate = builder.and(predicate,
+					builder.equal(queryPrestador.select(prestador.get("id"))
+							.where(builder.and(builder.or(builder.and(prestador.get("empresa").isNull(),
+									builder.between(prestador.get("geolocalizacao").get("geolocLongitude"),
+											geolocPositiva.getGeolocLongitude(), geolocNegativa.getGeolocLongitude()),
+									builder.between(prestador.get("geolocalizacao").get("geolocLatitude"),
+											geolocPositiva.getGeolocLatitude(), geolocNegativa.getGeolocLatitude())
+
+							), builder.and(prestador.get("empresa").isNotNull(),
+									builder.between(prestador.get("empresa").get("geolocalizacao").get("geolocLongitude"),
+											geolocPositiva.getGeolocLongitude(), geolocNegativa.getGeolocLongitude()),
+									builder.between(prestador.get("empresa").get("geolocalizacao").get("geolocLatitude"),
+											geolocPositiva.getGeolocLatitude(), geolocNegativa.getGeolocLatitude())))),
+									builder.equal(prestador.get("id"), root.get("id"))),
+							root.get("prestadorId")));
     	}
 
     	return predicate;

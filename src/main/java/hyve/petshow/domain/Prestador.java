@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,11 +20,11 @@ public class Prestador extends Conta {
 	private String descricao;
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "fk_prestador")
-	private List<ServicoDetalhado> servicosPrestados;
+	private List<ServicoDetalhado> servicosPrestados = new ArrayList<ServicoDetalhado>();
 
-	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_empresa")
-	private Empresa empresa;
+	private Empresa empresa = new Empresa();
 
 	public Prestador(Conta conta) {
 		super(conta.getId(), conta.getNome(), conta.getNomeSocial(), conta.getCpf(), conta.getTelefone(),

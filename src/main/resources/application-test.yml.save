@@ -1,8 +1,8 @@
 spring:
   datasource:
     #url: jdbc:h2:file:~/Documentos/projeto-integrado/database/db_temp
-    url: jdbc:h2:mem:testdb
-    #url: jdbc:h2:file:C:\Users\user\Desktop\Peshow\db_temp_PetShow
+    #url: jdbc:h2:mem:testdb
+   # url: jdbc:h2:file:C:\Users\user\Desktop\Peshow\db_temp_PetShow
     driverClassName: org.h2.Driver
     username: sa
     password: password

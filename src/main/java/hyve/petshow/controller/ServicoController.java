@@ -43,11 +43,4 @@ public class ServicoController {
     	
     	return service.buscarServicosPresentesEmEstado(cidade, estado);
     }
-    
-//    @Operation(summary = "Busca tipos de serviço presentes em um estado")
-//    @GetMapping
-//    public ResponseEntity<List<ServicoRepresentation>> buscarServicosPorEstado(@RequestParam(name = "cidade") String cidade,
-//    		@RequestParam(name = "estado") String estado) throws NotFoundException {
-//    	return null;
-//    }
 }

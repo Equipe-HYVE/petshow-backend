@@ -84,8 +84,8 @@ public class AcessoFacadeIntegration {
 
 	@AfterEach
 	public void limpaRepositories() {
-		empresaRepository.deleteAll();
 		prestadorRepository.deleteAll();
+		empresaRepository.deleteAll();
 		repository.deleteAll();
 	}
 
@@ -122,5 +122,6 @@ public class AcessoFacadeIntegration {
 		
 		assertNotNull(prestador.getEmpresa().getNome());
 		assertNotNull(prestador.getEmpresa().getRazaoSocial());
+		assertTrue(empresaRepository.findAll().size() == 1);
 	}
 }

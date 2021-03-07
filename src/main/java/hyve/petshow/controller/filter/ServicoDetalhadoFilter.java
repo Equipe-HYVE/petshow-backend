@@ -15,5 +15,7 @@ public class ServicoDetalhadoFilter {
     private BigDecimal menorPreco;
     private BigDecimal maiorPreco;
     private Geolocalizacao posicaoAtual;
-    private Double metrosGeoloc = 100d;
+    private Double metrosGeoloc = 600d;
+    private String cidade;
+    private String estado;
 }

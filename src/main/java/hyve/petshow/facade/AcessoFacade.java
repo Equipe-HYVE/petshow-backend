@@ -36,7 +36,9 @@ public class AcessoFacade {
 		var prestador = new Prestador(acessoService.adicionarConta(domain));
 		var empresa = domain.getEmpresa();
 
-		empresaService.salvarEmpresa(empresa, prestador.getId());
+		var empresaSalva = empresaService.salvarEmpresa(empresa, prestador.getId());
+		prestador.setEmpresa(empresaSalva);
+		prestadorService.atualizarConta(prestador.getId(), prestador);
 		return prestadorConverter.toRepresentation(prestadorService.buscarPorId(prestador.getId()));
 	}
 }
