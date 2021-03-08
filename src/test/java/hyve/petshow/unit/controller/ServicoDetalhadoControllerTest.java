@@ -5,6 +5,7 @@ import hyve.petshow.controller.converter.ServicoDetalhadoConverter;
 import hyve.petshow.controller.converter.ServicoDetalhadoTipoAnimalEstimacaoConverter;
 import hyve.petshow.controller.filter.ServicoDetalhadoFilter;
 import hyve.petshow.controller.representation.*;
+import hyve.petshow.domain.Adicional;
 import hyve.petshow.domain.ServicoDetalhado;
 import hyve.petshow.domain.ServicoDetalhadoTipoAnimalEstimacao;
 import hyve.petshow.exceptions.BusinessException;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static hyve.petshow.mock.AdicionalMock.criaAdicional;
 import static hyve.petshow.mock.AdicionalMock.criaAdicionalRepresentation;
 import static hyve.petshow.mock.AvaliacaoMock.criaAvaliacaoRepresentation;
 import static hyve.petshow.mock.MensagemMock.criaMensagemRepresentationSucesso;
@@ -100,7 +102,7 @@ public class ServicoDetalhadoControllerTest {
 				.buscarServicosDetalhadosPorIds(anyList());
 		doReturn(adicionalRepresentation).when(servicoDetalhadoFacade)
 				.atualizarAdicional(anyLong(), anyLong(), anyLong(), any(AdicionalRepresentation.class));
-		doReturn(mensagemRepresentation).when(servicoDetalhadoFacade).desativarAdicional(anyLong(), anyLong(), anyLong(), anyBoolean());
+		doReturn(adicionalRepresentation).when(servicoDetalhadoFacade).desativarAdicional(anyLong(), anyLong(), anyLong(), anyBoolean());
 		doReturn(servicoDetalhadoTipoAnimalEstimacao)
 				.when(servicoDetalhadoTipoAnimalEstimacaoConverter).toDomain(any(PrecoPorTipoRepresentation.class));
 		doReturn(precoPorTipoRepresentation).when(servicoDetalhadoTipoAnimalEstimacaoConverter)
@@ -235,7 +237,7 @@ public class ServicoDetalhadoControllerTest {
 	@Test
 	public void deve_desativar_adicional() throws Exception {
 		var actual = controller.desativarAdicional(1L, 1L, 1L, Boolean.FALSE);
-		var expected = ResponseEntity.ok(mensagemRepresentation);
+		var expected = ResponseEntity.ok(adicionalRepresentation);
 
 		assertEquals(expected, actual);
 	}

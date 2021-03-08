@@ -155,10 +155,10 @@ public class AdicionalServiceTest {
 
 		adicional.getAuditoria().setFlagAtivo("N");
 
-		doReturn(Optional.of(adicional)).when(repository).findById(anyLong());
+		doReturn(Optional.of(adicional)).when(repository).findById(1L);
 
 		assertThrows(NotFoundException.class,
-				() -> service.buscarPorId(1L));
+				() -> service.buscarPorId(2L));
 	}
 
 	@Test

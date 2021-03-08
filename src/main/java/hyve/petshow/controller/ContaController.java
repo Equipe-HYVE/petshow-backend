@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
+
 @Slf4j
 @RestController
 @RequestMapping("/conta")
@@ -29,7 +31,9 @@ public class ContaController {
 	@Operation(summary = "Busca conta por id.")
 	@GetMapping("/{id}")
 	public ResponseEntity<ContaRepresentation> buscarContaPorId(
-			@Parameter(description = "Id da conta.") @PathVariable Long id) throws Exception {
+			@Parameter(description = "Id da conta.")
+			@PathVariable Long id) throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/conta/{}", id);
 		var cliente = service.buscarPorId(id);
 		var representation = converter.toRepresentation(cliente);
 

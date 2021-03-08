@@ -1,8 +1,6 @@
 package hyve.petshow.service.implementation;
 
 import hyve.petshow.controller.filter.ServicoDetalhadoFilter;
-import hyve.petshow.controller.representation.MensagemRepresentation;
-import hyve.petshow.domain.Servico;
 import hyve.petshow.domain.ServicoDetalhado;
 import hyve.petshow.domain.ServicoDetalhadoTipoAnimalEstimacao;
 import hyve.petshow.exceptions.BusinessException;
@@ -10,6 +8,7 @@ import hyve.petshow.exceptions.NotFoundException;
 import hyve.petshow.repository.ServicoDetalhadoRepository;
 import hyve.petshow.repository.nativeQueryRepository.ServicoDetalhadoTipoAnimalEstimacaoNativeQueryRepository;
 import hyve.petshow.service.port.ServicoDetalhadoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +22,11 @@ import java.util.stream.Collectors;
 
 import static hyve.petshow.repository.specification.ServicoDetalhadoSpecification.geraSpecification;
 import static hyve.petshow.util.AuditoriaUtils.*;
+import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE;
 import static hyve.petshow.util.NullUtils.isNotNull;
 import static hyve.petshow.util.ProxyUtils.verificarIdentidade;
 
+@Slf4j
 @Service
 public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 	private static final String SERVICO_NAO_ENCONTRADO_PARA_PRESTADOR_MENCIONADO = "SERVICO_NAO_ENCONTRADO_PARA_PRESTADOR_MENCIONADO";//"Serviço não encontrado para prestador mencionado";
@@ -44,6 +45,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 	
 	@Override
 	public ServicoDetalhado adicionarServicoDetalhado(ServicoDetalhado servicoDetalhado) throws BusinessException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "adicionarServicoDetalhado", servicoDetalhado);
 		var servicosPrestador = repository.findByPrestadorId(servicoDetalhado.getPrestadorId());
 
 		if(servicosPrestador.stream()
@@ -74,6 +76,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 	@Override
 	public Page<ServicoDetalhado> buscarServicosDetalhadosPorTipoServico(Pageable pageable,
 																		 ServicoDetalhadoFilter filtragem) throws NotFoundException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "buscarServicosDetalhadosPorTipoServico", pageable, filtragem);
 		var specification = geraSpecification(filtragem);
 
 		var servicosDetalhados = repository.findAll(specification, pageable);
@@ -83,6 +86,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 	
 	@Override
 	public List<ServicoDetalhado> buscarServicosDetalhadosPorTipoServico(ServicoDetalhadoFilter filtragem) {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarServicosDetalhadosPorTipoServico", filtragem);
 		var spec = geraSpecification(filtragem);
 		var servicosDetalhados = repository.findAll(spec);
 		return servicosDetalhados;
@@ -91,6 +95,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 	@Override
 	public ServicoDetalhado adicionarTipoAnimalAceito(Long id, Long prestadorId, ServicoDetalhadoTipoAnimalEstimacao request)
 			throws BusinessException, NotFoundException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}, {}"), "adicionarTipoAnimalAceito", id, prestadorId, request);
 		var servicoDetalhado = buscarPorId(id);
 
 		if(!verificarIdentidade(servicoDetalhado.getPrestadorId(), prestadorId)) {
@@ -112,6 +117,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 	@Override
 	public ServicoDetalhado atualizarTipoAnimalAceito(Long id, Long prestadorId, Integer idTipoAnimal,
 													  ServicoDetalhadoTipoAnimalEstimacao request) throws BusinessException, NotFoundException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}, {}, {}"), "atualizarTipoAnimalAceito", id, prestadorId, idTipoAnimal, request);
 		var servicoDetalhado = repository.findById(id)
 				.orElseThrow(() -> new NotFoundException(SERVICO_DETALHADO_NAO_ENCONTRADO));
 
@@ -147,6 +153,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 
 	@Override
 	public void atualizarMediaAvaliacaoServicoDetalhado(Long id, Float mediaAvaliacao) throws NotFoundException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "atualizarMediaAvaliacaoServicoDetalhado", id, mediaAvaliacao);
 		var servicoDetalhado = buscarPorId(id);
 
 		servicoDetalhado.setMediaAvaliacao(mediaAvaliacao);
@@ -157,6 +164,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 	@Override
 	public ServicoDetalhado atualizarServicoDetalhado(Long id, Long prestadorId, Boolean ativo)
 			throws BusinessException, NotFoundException{
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}, {}"), "atualizarServicoDetalhado", id, prestadorId, ativo);
 		var servicoDetalhado = buscarPorId(id);
 
 		if(!verificarIdentidade(servicoDetalhado.getPrestadorId(), prestadorId)) {
@@ -172,6 +180,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 
 	@Override
 	public ServicoDetalhado buscarPorId(Long id) throws NotFoundException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarPorId", id);
 		var servicoDetalhado = repository.findById(id)
 				.orElseThrow(() -> new NotFoundException(SERVICO_DETALHADO_NAO_ENCONTRADO));
 
@@ -192,6 +201,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 
 	@Override
 	public Page<ServicoDetalhado> buscarPorPrestadorId(Long prestadorId, Pageable pageable) throws NotFoundException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "buscarPorPrestadorId", prestadorId, pageable);
 		var servicosDetalhados = repository.findByPrestadorId(prestadorId, pageable);
 
 		if(servicosDetalhados.isEmpty()){
@@ -203,6 +213,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 
 	@Override
 	public ServicoDetalhado buscarPorPrestadorIdEServicoId(Long prestadorId, Long servicoId) throws NotFoundException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "buscarPorPrestadorIdEServicoId", prestadorId, servicoId);
 		var servicoDetalhado = repository.findByIdAndPrestadorId(servicoId, prestadorId)
 				.orElseThrow(() -> new NotFoundException(SERVICO_NAO_ENCONTRADO_PARA_PRESTADOR_MENCIONADO));
 
@@ -223,6 +234,7 @@ public class ServicoDetalhadoServiceImpl implements ServicoDetalhadoService {
 
 	@Override
 	public List<ServicoDetalhado> buscarServicosDetalhadosPorIds(List<Long> idsServicos) {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarServicosDetalhadosPorIds", idsServicos);
 		var servicosDetalhados =  repository.findAllById(idsServicos);
 
 		/*TODO: ARRUMAR ESSES NEGOCIOS NAO MUITO LEGAIS*/

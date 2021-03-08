@@ -5,6 +5,7 @@ import hyve.petshow.exceptions.BusinessException;
 import hyve.petshow.exceptions.NotFoundException;
 import hyve.petshow.repository.AdicionalRepository;
 import hyve.petshow.service.port.AdicionalService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static hyve.petshow.util.AuditoriaUtils.*;
+import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE;
 
+@Slf4j
 @Service
 public class AdicionalServiceImpl implements AdicionalService {
 	private static final String ADICIONAL_NAO_ENCONTRADO = "ADICIONAL_NAO_ENCONTRADO";
@@ -28,6 +31,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 
 	@Override
 	public List<Adicional> buscarAtivosPorServicoDetalhado(Long idServico) throws Exception {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarAtivosPorServicoDetalhado", idServico);
 		var adicionais = repository.findByServicoDetalhadoIdAndAuditoriaFlagAtivo(idServico, ATIVO);
 
 		if (adicionais.isEmpty()) {
@@ -39,6 +43,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 
 	@Override
 	public List<Adicional> buscarPorServicoDetalhado(Long idServico) throws Exception {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarPorServicoDetalhado", idServico);
 		var adicionais = repository.findByServicoDetalhadoId(idServico);
 
 		if (adicionais.isEmpty()) {
@@ -50,6 +55,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 
 	@Override
 	public Adicional buscarPorId(Long idAdicional) throws Exception {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarPorId", idAdicional);
 		var adicional = repository.findById(idAdicional)
 				.orElseThrow(() -> new NotFoundException(ADICIONAL_NAO_ENCONTRADO));
 
@@ -58,6 +64,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 
 	@Override
 	public List<Adicional> buscarAdicionaisPorIds(Long servicoDetalhadoId, List<Long> adicionaisIds) throws Exception {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "buscarAdicionaisPorIds", servicoDetalhadoId, adicionaisIds);
 		var adicionais = repository.findByServicoDetalhadoIdAndIdInAndAuditoriaFlagAtivo(servicoDetalhadoId, adicionaisIds, ATIVO);
 
 		if(adicionais.isEmpty()) {
@@ -69,6 +76,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 
 	@Override
 	public Adicional criarAdicional(Adicional adicional, Long prestadorId) {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "criarAdicional", adicional, prestadorId);
 		adicional.setAuditoria(geraAuditoriaInsercao(Optional.of(prestadorId)));
 
 		return repository.save(adicional);
@@ -76,6 +84,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 
 	@Override
 	public Adicional atualizarAdicional(Long idAdicional, Adicional adicional) throws Exception {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "atualizarAdicional", idAdicional, adicional);
 		var busca = buscarPorId(idAdicional);
 
 		if(adicional.getServicoDetalhadoId() != busca.getServicoDetalhadoId()){
@@ -92,6 +101,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 
 	@Override
 	public Adicional desativarAdicional(Long idAdicional, Long idServico, Boolean ativo) throws Exception {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}, {}"), "desativarAdicional", idAdicional, idServico, ativo);
 		var adicional = buscarPorId(idAdicional);
 
 		if (adicional.getServicoDetalhadoId() != idServico) {
@@ -106,6 +116,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 
 	@Override
 	public List<Adicional> criarAdicionais(List<Adicional> adicionais, Long prestadorId) {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "criarAdicionais", adicionais, prestadorId);
 		return Optional.ofNullable(adicionais).map(lista -> {
 			return lista.stream()
 					.map(el -> {

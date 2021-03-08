@@ -101,7 +101,7 @@ public class ServicoDetalhadoFacadeTest {
         doReturn(servicosDetalhados).when(servicoDetalhadoService).buscarServicosDetalhadosPorIds(anyList());
         doReturn(servicosDetalhadosRepresentation).when(servicoDetalhadoConverter).toRepresentationList(anyList());
         doReturn(adicional).when(adicionalService).atualizarAdicional(anyLong(), any(Adicional.class));
-        doReturn(TRUE).when(adicionalService).desativarAdicional(anyLong(), anyLong(), anyBoolean());
+        doReturn(adicional).when(adicionalService).desativarAdicional(anyLong(), anyLong(), anyBoolean());
     }
 
     @Test
@@ -150,6 +150,6 @@ public class ServicoDetalhadoFacadeTest {
     public void deve_desativar_adicional() throws Exception {
         var actual = servicoDetalhadoFacade.desativarAdicional(1L, 1L, 1L, TRUE);
 
-        assertEquals(mensagemRepresentation, actual);
+        assertEquals(adicionalRepresentation, actual);
     }
 }

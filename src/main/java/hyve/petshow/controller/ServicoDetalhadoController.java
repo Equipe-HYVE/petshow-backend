@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
+import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
 import static hyve.petshow.util.PagingAndSortingUtils.geraPageable;
 
+@Slf4j
 @RestController
 @RequestMapping
 @OpenAPIDefinition(info = @Info(title = "API servico detalhado", description = "API para CRUD de servico detalhado"))
@@ -48,6 +52,8 @@ public class ServicoDetalhadoController {
 			@Parameter(description = "Número de itens")
 			@RequestParam("quantidadeItens") Integer quantidadeItens)
 			throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/prestador/{}/servico-detalhado?pagina={}&quantidadeItens={}",
+				prestadorId, pagina, quantidadeItens);
 		var servico = service.buscarPorPrestadorId(prestadorId, geraPageable(pagina, quantidadeItens));
 		var representation = converter.toRepresentationPage(servico);
 
@@ -64,6 +70,8 @@ public class ServicoDetalhadoController {
 			@Parameter(description = "Informações relacionadas a filtragem")
 			@RequestBody ServicoDetalhadoFilter filtragem)
 			throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/servico-detalhado/filtro?pagina={}&quantidadeItens={}",
+				filtragem, pagina, quantidadeItens);
 		var servicosDetalhados = servicoDetalhadoFacade
 				.buscarServicosDetalhadosPorTipoServico(geraPageable(pagina, quantidadeItens), filtragem);
 		var response = ResponseEntity.ok(servicosDetalhados);
@@ -73,8 +81,10 @@ public class ServicoDetalhadoController {
 	
 	@Operation(summary = "Busca serviços detalhados por geolocalizacao")
 	@PostMapping("/servico-detalhado/geoloc")
-	public ResponseEntity<List<ServicoDetalhadoRepresentation>> buscaGeolocalizacao(@Parameter(description = "Informações relacionadas a filtragem")
-	@RequestBody ServicoDetalhadoFilter filtragem) throws Exception {
+	public ResponseEntity<List<ServicoDetalhadoRepresentation>> buscaGeolocalizacao(
+			@Parameter(description = "Informações relacionadas a filtragem")
+			@RequestBody ServicoDetalhadoFilter filtragem) throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/servico-detalhado/geoloc", filtragem);
 		var servicosDetalhados = servicoDetalhadoFacade.buscarServicosDetalhadosPorTipoServico(filtragem);
 		return ResponseEntity.ok(servicosDetalhados);
 	}
@@ -89,6 +99,8 @@ public class ServicoDetalhadoController {
 			@Parameter(description = "Número de itens")
 			@RequestParam("quantidadeItens") Integer quantidadeItens)
 			throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/servico-detalhado/{}/avaliacoes?pagina={}&quantidadeItens={}",
+				id, pagina, quantidadeItens);
 		var avaliacoes = avaliacaoFacade.buscarAvaliacaoPorServico(id, geraPageable(pagina, quantidadeItens));
 
 		return ResponseEntity.ok(avaliacoes);
@@ -101,6 +113,7 @@ public class ServicoDetalhadoController {
 			@PathVariable Long idPrestador,
 			@Parameter(description = "Serviço que será inserido.")
 			@RequestBody ServicoDetalhadoRepresentation request) throws BusinessException {
+		log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/prestador/{}/servico-detalhado", request, idPrestador);
 		var servico = converter.toDomain(request);
 		servico.setPrestadorId(idPrestador);
 		servico = service.adicionarServicoDetalhado(servico);
@@ -118,6 +131,7 @@ public class ServicoDetalhadoController {
 			@PathVariable Long id,
 			@Parameter(description = "Status novo do serviço detalhado")
 			@RequestParam Boolean ativo) throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/prestador/{}/servico-detalhado/{}?ativo={}", prestadorId, id, ativo);
 		var response = service.atualizarServicoDetalhado(id, prestadorId, ativo);
 		var representation = converter.toRepresentation(response);
 
@@ -131,6 +145,7 @@ public class ServicoDetalhadoController {
 			@PathVariable Long prestadorId,
 			@Parameter(description = "Id do serviço detalhado.")
 			@PathVariable Long servicoId) throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/prestador/{}/servico-detalhado/{}", prestadorId, servicoId);
 		var servicoDetalhado = servicoDetalhadoFacade.buscarPorPrestadorIdEServicoId(prestadorId, servicoId);
 
 		return ResponseEntity.ok(servicoDetalhado);
@@ -148,6 +163,8 @@ public class ServicoDetalhadoController {
 			@Parameter(description = "Serviço detalhado a ser atualizado")
 			@RequestBody PrecoPorTipoRepresentation request)
 			throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/prestador/{}/servico-detalhado/{}/tipoAnimalAceito/tipoAnimal/{}",
+				request, idPrestador, idServico, idTipoAnimal);
 		var servico = servicoDetalhadoFacade.adicionarTipoAnimalAceito(idServico, idPrestador, idTipoAnimal,
 				servicoDetalhadoTipoAnimalEstimacaoConverter.toDomain(request));
 
@@ -166,6 +183,8 @@ public class ServicoDetalhadoController {
 			@Parameter(description = "Serviço detalhado a ser atualizado")
 			@RequestBody PrecoPorTipoRepresentation request)
 			throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/prestador/{}/servico-detalhado/{}/tipoAnimalAceito/tipoAnimal/{}",
+				request, idPrestador, idServico, idTipoAnimal);
 		var servico = service.atualizarTipoAnimalAceito(idServico, idPrestador, idTipoAnimal,
 				servicoDetalhadoTipoAnimalEstimacaoConverter.toDomain(request));
 		var representation = converter.toRepresentation(servico);
@@ -182,7 +201,10 @@ public class ServicoDetalhadoController {
 			@PathVariable Long idServico,
 			@Parameter(description = "Flag para verificar se deve-se buscar apenas adicionais ativos ou todos")
 			@RequestParam Boolean apenasAtivos) throws Exception {
-		return ResponseEntity.ok(servicoDetalhadoFacade.buscarAdicionais(idPrestador, idServico, apenasAtivos));
+		log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/prestador/{}/servico-detalhado/{}/adicional?apenasAtivos={}",
+				idPrestador, idServico, apenasAtivos);
+		var representation = servicoDetalhadoFacade.buscarAdicionais(idPrestador, idServico, apenasAtivos);
+		return ResponseEntity.ok(representation);
 	}
 
 	@Operation(summary = "Cria novo adicional para um serviço")
@@ -195,6 +217,8 @@ public class ServicoDetalhadoController {
 			@Parameter(description = "Corpo do adicional a adicionar")
 			@RequestBody AdicionalRepresentation request)
 			throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/prestador/{}/servico-detalhado/{}/adicional",
+				request, idPrestador, idServico);
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(servicoDetalhadoFacade.criaAdicional(idPrestador, idServico, request));
 	}
@@ -204,6 +228,7 @@ public class ServicoDetalhadoController {
 	public ResponseEntity<ComparacaoWrapper> buscarServicosParaComparacao(
 			@Parameter(description = "Lista de ID's a buscar")
 			@RequestParam(name = "ids") List<Long> idsServicos) throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/servico-detalhado?ids={}", idsServicos);
 		var servicos = servicoDetalhadoFacade.buscarServicosDetalhadosPorIds(idsServicos);
 
 		return ResponseEntity.ok(ComparacaoUtils.criaWrapper(servicos));
@@ -221,6 +246,8 @@ public class ServicoDetalhadoController {
 			@Parameter(description = "Corpo do adicional a atualizar")
 			@RequestBody AdicionalRepresentation request)
 			throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/prestador/{}/servico-detalhado/{}/adicional/{}",
+				request, idPrestador, idServico, idAdicional);
 		var adicional = servicoDetalhadoFacade.atualizarAdicional(idPrestador, idServico, idAdicional, request);
 
 		return ResponseEntity.ok(adicional);
@@ -238,6 +265,8 @@ public class ServicoDetalhadoController {
 			@Parameter(description = "Status novo do adicional")
 			@RequestParam Boolean ativo)
 			throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/prestador/{}/servico-detalhado/{}/adicional/{}?ativo={}",
+				idPrestador, idServico, idAdicional, ativo);
 		var representation = servicoDetalhadoFacade.desativarAdicional(idPrestador, idServico, idAdicional, ativo);
 
 		return ResponseEntity.ok(representation);
