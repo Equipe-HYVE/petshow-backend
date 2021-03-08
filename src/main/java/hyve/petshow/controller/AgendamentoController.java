@@ -222,3 +222,4 @@ public class AgendamentoController {
 		var agendamento = agendamentoFacade.confirmaNegociacao(agendamentoId, prestadorId, negociacaoRepresentation);
 		return ResponseEntity.ok(agendamento);
 	}
+}
