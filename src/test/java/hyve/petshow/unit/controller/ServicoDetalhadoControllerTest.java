@@ -1,17 +1,30 @@
 package hyve.petshow.unit.controller;
 
-import hyve.petshow.controller.ServicoDetalhadoController;
-import hyve.petshow.controller.converter.ServicoDetalhadoConverter;
-import hyve.petshow.controller.converter.ServicoDetalhadoTipoAnimalEstimacaoConverter;
-import hyve.petshow.controller.filter.ServicoDetalhadoFilter;
-import hyve.petshow.controller.representation.*;
-import hyve.petshow.domain.ServicoDetalhado;
-import hyve.petshow.domain.ServicoDetalhadoTipoAnimalEstimacao;
-import hyve.petshow.exceptions.BusinessException;
-import hyve.petshow.exceptions.NotFoundException;
-import hyve.petshow.facade.AvaliacaoFacade;
-import hyve.petshow.facade.ServicoDetalhadoFacade;
-import hyve.petshow.service.port.ServicoDetalhadoService;
+import static hyve.petshow.mock.AdicionalMock.criaAdicionalRepresentation;
+import static hyve.petshow.mock.AvaliacaoMock.criaAvaliacaoRepresentation;
+import static hyve.petshow.mock.MensagemMock.criaMensagemRepresentationSucesso;
+import static hyve.petshow.mock.ServicoDetalhadoMock.criaPrecoPorTipoRepresentation;
+import static hyve.petshow.mock.ServicoDetalhadoMock.criaServicoDetalhado;
+import static hyve.petshow.mock.ServicoDetalhadoMock.criaServicoDetalhadoList;
+import static hyve.petshow.mock.ServicoDetalhadoMock.criaServicoDetalhadoRepresentation;
+import static hyve.petshow.mock.ServicoDetalhadoMock.criaServicoDetalhadoRepresentationList;
+import static hyve.petshow.mock.ServicoDetalhadoMock.criaServicoDetalhadoTipoAnimalEstimacao;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.MockitoAnnotations.openMocks;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,22 +36,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static hyve.petshow.mock.AdicionalMock.criaAdicionalRepresentation;
-import static hyve.petshow.mock.AvaliacaoMock.criaAvaliacaoRepresentation;
-import static hyve.petshow.mock.MensagemMock.criaMensagemRepresentationSucesso;
-import static hyve.petshow.mock.ServicoDetalhadoMock.*;
-import static hyve.petshow.util.AuditoriaUtils.INATIVO;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.MockitoAnnotations.openMocks;
+import hyve.petshow.controller.ServicoDetalhadoController;
+import hyve.petshow.controller.converter.ServicoDetalhadoConverter;
+import hyve.petshow.controller.converter.ServicoDetalhadoTipoAnimalEstimacaoConverter;
+import hyve.petshow.controller.filter.ServicoDetalhadoFilter;
+import hyve.petshow.controller.representation.AdicionalRepresentation;
+import hyve.petshow.controller.representation.AvaliacaoRepresentation;
+import hyve.petshow.controller.representation.ComparacaoWrapper;
+import hyve.petshow.controller.representation.MensagemRepresentation;
+import hyve.petshow.controller.representation.PrecoPorTipoRepresentation;
+import hyve.petshow.controller.representation.ServicoDetalhadoRepresentation;
+import hyve.petshow.domain.ServicoDetalhado;
+import hyve.petshow.domain.ServicoDetalhadoTipoAnimalEstimacao;
+import hyve.petshow.exceptions.NotFoundException;
+import hyve.petshow.facade.AvaliacaoFacade;
+import hyve.petshow.facade.ServicoDetalhadoFacade;
+import hyve.petshow.service.port.ServicoDetalhadoService;
 
 public class ServicoDetalhadoControllerTest {
 	@Mock
@@ -119,7 +132,7 @@ public class ServicoDetalhadoControllerTest {
 	}
 
 	@Test
-	public void deve_adicionar_e_retornar_servico_detalhado() throws BusinessException {
+	public void deve_adicionar_e_retornar_servico_detalhado() throws Exception {
 		var expected = ResponseEntity.status(HttpStatus.CREATED).body(servicoDetalhadoRepresentation);
 
 		var actual = controller.adicionarServicoDetalhado(1L, servicoDetalhadoRepresentation);

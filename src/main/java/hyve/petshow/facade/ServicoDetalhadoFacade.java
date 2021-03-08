@@ -1,5 +1,13 @@
 package hyve.petshow.facade;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
+
 import hyve.petshow.controller.converter.AdicionalConverter;
 import hyve.petshow.controller.converter.PrestadorConverter;
 import hyve.petshow.controller.converter.ServicoDetalhadoConverter;
@@ -15,12 +23,6 @@ import hyve.petshow.service.port.AdicionalService;
 import hyve.petshow.service.port.PrestadorService;
 import hyve.petshow.service.port.ServicoDetalhadoService;
 import hyve.petshow.service.port.TipoAnimalEstimacaoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class ServicoDetalhadoFacade {
@@ -143,4 +145,15 @@ public class ServicoDetalhadoFacade {
 
         return representation;
     }
+
+	public ServicoDetalhado adicionarServicoDetalhado(ServicoDetalhado servico) throws BusinessException, NotFoundException {
+		var adicionais = servico.getAdicionais();
+		servico.setAdicionais(new ArrayList<>());
+		var servicoAdicionado = servicoDetalhadoService.adicionarServicoDetalhado(servico);
+		adicionais.stream().forEach(adicional -> {
+			adicional.setServicoDetalhadoId(servicoAdicionado.getId());
+			adicionalService.criarAdicional(adicional, servicoAdicionado.getPrestadorId());
+		});
+		return servicoDetalhadoService.buscarPorId(servicoAdicionado.getId());
+	}
 }
