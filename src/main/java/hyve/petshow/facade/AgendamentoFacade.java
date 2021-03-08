@@ -165,6 +165,7 @@ public class AgendamentoFacade {
 			NegociacaoRepresentation negociacaoRepresentation) throws BusinessException, NotFoundException {
 		var agendamento = agendamentoService.buscarPorId(agendamentoId, prestadorId);
 		var negociacao = negociacaoConverter.toDomain(negociacaoRepresentation);
+		negociacao.setIdAgendamento(agendamento.getId());
 		if (negociacaoRepresentation.getRespostaOferta()) {
 			agendamento.setPrecoFinal(negociacao.getPrecoOferta());
 		}
