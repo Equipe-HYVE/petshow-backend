@@ -39,13 +39,19 @@ public class PrestadorServiceImpl implements PrestadorService {
     @Override
     public Prestador atualizarConta(Long id, Prestador request) throws Exception {
         log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "atualizarConta", id, request);
+        return atualizarConta(id, request, ATIVO);
+    }
+
+    @Override
+    public Prestador atualizarConta(Long id, Prestador request, String ativo) throws Exception {
+        log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "atualizarConta", id, request);
         var prestador = buscarPorId(id);
 
         prestador.setTelefone(request.getTelefone());
         prestador.setEndereco(request.getEndereco());
         prestador.setGeolocalizacao(geraGeolocalizacao(prestador.getEndereco()));
         prestador.setEmpresa(Optional.ofNullable(request.getEmpresa()).orElse(null));
-        prestador.setAuditoria(atualizaAuditoria(prestador.getAuditoria(), ATIVO));
+        prestador.setAuditoria(atualizaAuditoria(prestador.getAuditoria(), ativo));
         
         return repository.save(prestador);
     }

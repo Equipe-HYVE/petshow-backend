@@ -11,4 +11,6 @@ public interface StatusAgendamentoService {
     List<StatusAgendamento> buscarStatusAgendamento() throws NotFoundException;
 
     StatusAgendamento buscarStatusAgendamento(Integer statusId) throws NotFoundException;
+    
+    StatusAgendamento buscarStatusPorNome(String nome) throws NotFoundException;
 }
