@@ -24,7 +24,7 @@ public class Prestador extends Conta {
 
 	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "fk_empresa")
-	private Empresa empresa = new Empresa();
+	private Empresa empresa;
 
 	public Prestador(Conta conta) {
 		super(conta.getId(), conta.getNome(), conta.getNomeSocial(), conta.getCpf(), conta.getTelefone(),
