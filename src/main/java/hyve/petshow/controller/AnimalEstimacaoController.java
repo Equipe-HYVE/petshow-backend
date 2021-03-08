@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
 import static hyve.petshow.util.PagingAndSortingUtils.geraPageable;
 
 @Slf4j

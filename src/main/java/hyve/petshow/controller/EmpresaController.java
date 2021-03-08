@@ -16,8 +16,8 @@ import hyve.petshow.controller.converter.EmpresaConverter;
 import hyve.petshow.controller.representation.EmpresaRepresentation;
 import hyve.petshow.service.port.EmpresaService;
 
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
 
 @Slf4j
 @RestController

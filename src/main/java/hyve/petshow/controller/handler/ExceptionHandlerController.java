@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import static hyve.petshow.util.LogUtils.Messages.ERROR_REQUEST_MESSAGE;
+import static hyve.petshow.util.LogUtils.ERROR_REQUEST_MESSAGE;
 
 @Slf4j
 @ControllerAdvice

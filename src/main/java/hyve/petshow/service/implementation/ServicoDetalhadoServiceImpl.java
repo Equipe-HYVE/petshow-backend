@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 import static hyve.petshow.repository.specification.ServicoDetalhadoSpecification.geraSpecification;
 import static hyve.petshow.util.AuditoriaUtils.*;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
 import static hyve.petshow.util.NullUtils.isNotNull;
 import static hyve.petshow.util.ProxyUtils.verificarIdentidade;
 

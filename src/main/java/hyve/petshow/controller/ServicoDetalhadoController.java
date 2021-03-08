@@ -5,6 +5,7 @@ import hyve.petshow.controller.converter.ServicoDetalhadoTipoAnimalEstimacaoConv
 import hyve.petshow.controller.filter.ServicoDetalhadoFilter;
 import hyve.petshow.controller.representation.*;
 import hyve.petshow.exceptions.BusinessException;
+import hyve.petshow.exceptions.NotFoundException;
 import hyve.petshow.facade.AvaliacaoFacade;
 import hyve.petshow.facade.ServicoDetalhadoFacade;
 import hyve.petshow.service.port.ServicoDetalhadoService;
@@ -22,8 +23,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
 import static hyve.petshow.util.PagingAndSortingUtils.geraPageable;
 
 @Slf4j
@@ -112,11 +113,12 @@ public class ServicoDetalhadoController {
 			@Parameter(description = "Id do prestador.")
 			@PathVariable Long idPrestador,
 			@Parameter(description = "Serviço que será inserido.")
-			@RequestBody ServicoDetalhadoRepresentation request) throws BusinessException {
+			@RequestBody ServicoDetalhadoRepresentation request) throws BusinessException, NotFoundException {
 		log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/prestador/{}/servico-detalhado", request, idPrestador);
 		var servico = converter.toDomain(request);
 		servico.setPrestadorId(idPrestador);
-		servico = service.adicionarServicoDetalhado(servico);
+//		servico = service.adicionarServicoDetalhado(servico);
+		servico = servicoDetalhadoFacade.adicionarServicoDetalhado(servico);
 		var representation = converter.toRepresentation(servico);
 
 		return ResponseEntity.status(HttpStatus.CREATED).body(representation);

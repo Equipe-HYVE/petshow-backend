@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 import static hyve.petshow.util.AuditoriaUtils.geraAuditoriaInsercao;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
 
 @Slf4j
 @Service

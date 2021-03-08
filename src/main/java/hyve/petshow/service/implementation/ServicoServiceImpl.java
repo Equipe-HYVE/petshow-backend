@@ -4,8 +4,8 @@ import hyve.petshow.domain.Servico;
 import hyve.petshow.exceptions.NotFoundException;
 import hyve.petshow.repository.ServicoRepository;
 import static hyve.petshow.repository.specification.ServicoSpecification.geraSpecification;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE_EMPTY;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE_EMPTY;
 
 import hyve.petshow.service.port.ServicoService;
 import lombok.extern.slf4j.Slf4j;

@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static hyve.petshow.util.AuditoriaUtils.*;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
 
 @Slf4j
 @Service

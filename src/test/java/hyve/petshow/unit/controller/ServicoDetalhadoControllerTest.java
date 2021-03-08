@@ -5,7 +5,6 @@ import hyve.petshow.controller.converter.ServicoDetalhadoConverter;
 import hyve.petshow.controller.converter.ServicoDetalhadoTipoAnimalEstimacaoConverter;
 import hyve.petshow.controller.filter.ServicoDetalhadoFilter;
 import hyve.petshow.controller.representation.*;
-import hyve.petshow.domain.Adicional;
 import hyve.petshow.domain.ServicoDetalhado;
 import hyve.petshow.domain.ServicoDetalhadoTipoAnimalEstimacao;
 import hyve.petshow.exceptions.BusinessException;
@@ -29,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static hyve.petshow.mock.AdicionalMock.criaAdicional;
 import static hyve.petshow.mock.AdicionalMock.criaAdicionalRepresentation;
 import static hyve.petshow.mock.AvaliacaoMock.criaAvaliacaoRepresentation;
 import static hyve.petshow.mock.MensagemMock.criaMensagemRepresentationSucesso;
@@ -81,7 +79,7 @@ public class ServicoDetalhadoControllerTest {
 		openMocks(this);
 
 		doReturn(servicoDetalhadoPage).when(service).buscarPorPrestadorId(anyLong(), any(Pageable.class));
-		doReturn(servicoDetalhado).when(service).adicionarServicoDetalhado(any(ServicoDetalhado.class));
+		doReturn(servicoDetalhado).when(servicoDetalhadoFacade).adicionarServicoDetalhado(any(ServicoDetalhado.class));
 		doReturn(servicoDetalhado).when(service).atualizarServicoDetalhado(anyLong(), anyLong(), anyBoolean());
 		doReturn(servicoDetalhado).when(service).buscarPorPrestadorIdEServicoId(anyLong(), anyLong());
 		doReturn(servicoDetalhado).when(service).adicionarTipoAnimalAceito(anyLong(), anyLong(),
@@ -121,7 +119,7 @@ public class ServicoDetalhadoControllerTest {
 	}
 
 	@Test
-	public void deve_adicionar_e_retornar_servico_detalhado() throws BusinessException {
+	public void deve_adicionar_e_retornar_servico_detalhado() throws Exception {
 		var expected = ResponseEntity.status(HttpStatus.CREATED).body(servicoDetalhadoRepresentation);
 
 		var actual = controller.adicionarServicoDetalhado(1L, servicoDetalhadoRepresentation);

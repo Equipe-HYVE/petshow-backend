@@ -1,7 +1,7 @@
 package hyve.petshow.service.implementation;
 
 import static hyve.petshow.util.AuditoriaUtils.*;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
 import static hyve.petshow.util.ProxyUtils.verificarIdentidade;
 
 import java.time.LocalDate;

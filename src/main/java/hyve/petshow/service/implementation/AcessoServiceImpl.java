@@ -18,7 +18,7 @@ import hyve.petshow.service.port.AcessoService;
 import static hyve.petshow.util.GeoLocUtils.geraUrl;
 import static hyve.petshow.util.GeoLocUtils.mapeiaJson;
 
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
 import static hyve.petshow.util.OkHttpUtils.getRequest;
 
 import lombok.extern.slf4j.Slf4j;

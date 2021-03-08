@@ -4,7 +4,7 @@ import static hyve.petshow.util.AuditoriaUtils.ATIVO;
 import static hyve.petshow.util.AuditoriaUtils.INATIVO;
 import static hyve.petshow.util.AuditoriaUtils.atualizaAuditoria;
 import static hyve.petshow.util.AuditoriaUtils.geraAuditoriaInsercao;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
 import static hyve.petshow.util.OkHttpUtils.getRequest;
 
 import java.util.Optional;

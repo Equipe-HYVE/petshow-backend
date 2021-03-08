@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE;
-import static hyve.petshow.util.LogUtils.Messages.INFO_REQUEST_SERVICE_EMPTY;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE_EMPTY;
 
 @Slf4j
 @Service
