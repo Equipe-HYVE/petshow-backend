@@ -79,7 +79,7 @@ public class ServicoDetalhadoControllerTest {
 		openMocks(this);
 
 		doReturn(servicoDetalhadoPage).when(service).buscarPorPrestadorId(anyLong(), any(Pageable.class));
-		doReturn(servicoDetalhado).when(service).adicionarServicoDetalhado(any(ServicoDetalhado.class));
+		doReturn(servicoDetalhado).when(servicoDetalhadoFacade).adicionarServicoDetalhado(any(ServicoDetalhado.class));
 		doReturn(servicoDetalhado).when(service).atualizarServicoDetalhado(anyLong(), anyLong(), anyBoolean());
 		doReturn(servicoDetalhado).when(service).buscarPorPrestadorIdEServicoId(anyLong(), anyLong());
 		doReturn(servicoDetalhado).when(service).adicionarTipoAnimalAceito(anyLong(), anyLong(),
@@ -100,7 +100,7 @@ public class ServicoDetalhadoControllerTest {
 				.buscarServicosDetalhadosPorIds(anyList());
 		doReturn(adicionalRepresentation).when(servicoDetalhadoFacade)
 				.atualizarAdicional(anyLong(), anyLong(), anyLong(), any(AdicionalRepresentation.class));
-		doReturn(mensagemRepresentation).when(servicoDetalhadoFacade).desativarAdicional(anyLong(), anyLong(), anyLong());
+		doReturn(adicionalRepresentation).when(servicoDetalhadoFacade).desativarAdicional(anyLong(), anyLong(), anyLong(), anyBoolean());
 		doReturn(servicoDetalhadoTipoAnimalEstimacao)
 				.when(servicoDetalhadoTipoAnimalEstimacaoConverter).toDomain(any(PrecoPorTipoRepresentation.class));
 		doReturn(precoPorTipoRepresentation).when(servicoDetalhadoTipoAnimalEstimacaoConverter)
@@ -119,7 +119,7 @@ public class ServicoDetalhadoControllerTest {
 	}
 
 	@Test
-	public void deve_adicionar_e_retornar_servico_detalhado() throws BusinessException {
+	public void deve_adicionar_e_retornar_servico_detalhado() throws Exception {
 		var expected = ResponseEntity.status(HttpStatus.CREATED).body(servicoDetalhadoRepresentation);
 
 		var actual = controller.adicionarServicoDetalhado(1L, servicoDetalhadoRepresentation);
@@ -178,17 +178,17 @@ public class ServicoDetalhadoControllerTest {
 		};
 		var expected = ResponseEntity.ok(adicionais);
 
-		doReturn(adicionais).when(servicoDetalhadoFacade).buscarAdicionais(anyLong(), anyLong());
+		doReturn(adicionais).when(servicoDetalhadoFacade).buscarAdicionais(anyLong(), anyLong(), anyBoolean());
 
-		var busca = controller.buscarAdicionais(1l, 1l);
+		var busca = controller.buscarAdicionais(1l, 1l, Boolean.TRUE);
 
 		assertEquals(expected, busca);
 	}
 
 	@Test
 	public void deve_retornar_excecao_ao_nao_encontrar_servicos() throws Exception {
-		doThrow(NotFoundException.class).when(servicoDetalhadoFacade).buscarAdicionais(anyLong(), anyLong());
-		assertThrows(NotFoundException.class, () -> controller.buscarAdicionais(1l, 1l));
+		doThrow(NotFoundException.class).when(servicoDetalhadoFacade).buscarAdicionais(anyLong(), anyLong(), anyBoolean());
+		assertThrows(NotFoundException.class, () -> controller.buscarAdicionais(1l, 1l, Boolean.TRUE));
 	}
 
 	@Test
@@ -234,8 +234,8 @@ public class ServicoDetalhadoControllerTest {
 
 	@Test
 	public void deve_desativar_adicional() throws Exception {
-		var actual = controller.desativarAdicional(1L, 1L, 1L);
-		var expected = ResponseEntity.ok(mensagemRepresentation);
+		var actual = controller.desativarAdicional(1L, 1L, 1L, Boolean.FALSE);
+		var expected = ResponseEntity.ok(adicionalRepresentation);
 
 		assertEquals(expected, actual);
 	}

@@ -9,14 +9,17 @@ import hyve.petshow.repository.PrestadorRepository;
 import hyve.petshow.service.port.PrestadorService;
 import hyve.petshow.util.GeoLocUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 import static hyve.petshow.util.AuditoriaUtils.*;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
 import static hyve.petshow.util.OkHttpUtils.getRequest;
 
+@Slf4j
 @Service
 public class PrestadorServiceImpl implements PrestadorService {
     private static final String CONTA_NAO_ENCONTRADA = "CONTA_NAO_ENCONTRADA";//"Conta não encontrada";
@@ -26,6 +29,7 @@ public class PrestadorServiceImpl implements PrestadorService {
 
     @Override
     public Prestador buscarPorId(Long id) throws Exception {
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarPorId", id);
         var prestador = repository.findById(id).orElseThrow(
                 () -> new NotFoundException(CONTA_NAO_ENCONTRADA));
 
@@ -34,6 +38,7 @@ public class PrestadorServiceImpl implements PrestadorService {
 
     @Override
     public Prestador atualizarConta(Long id, Prestador request) throws Exception {
+        log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "atualizarConta", id, request);
         var prestador = buscarPorId(id);
 
         prestador.setTelefone(request.getTelefone());
@@ -46,7 +51,8 @@ public class PrestadorServiceImpl implements PrestadorService {
     }
 
     private Geolocalizacao geraGeolocalizacao(Endereco endereco) {
-		var geolocalizacao = new Geolocalizacao();
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "geraGeolocalizacao", endereco);
+        var geolocalizacao = new Geolocalizacao();
     	try {
     		var url = GeoLocUtils.geraUrl(endereco);
         	var response = getRequest(url);
@@ -61,6 +67,7 @@ public class PrestadorServiceImpl implements PrestadorService {
     
     @Override
     public MensagemRepresentation desativarConta(Long id) throws Exception {
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "desativarConta", id);
         var conta = buscarPorId(id);
         var mensagem = new MensagemRepresentation();
 
@@ -75,6 +82,7 @@ public class PrestadorServiceImpl implements PrestadorService {
 
     @Override
     public Optional<Prestador> buscarPorEmail(String email) {
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarPorEmail", email);
         return repository.findByEmail(email);
     }
 }

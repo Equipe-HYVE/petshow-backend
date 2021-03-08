@@ -52,7 +52,7 @@ public class AdicionalServiceTest {
 		doReturn(esperado).when(repository).findByServicoDetalhadoIdAndAuditoriaFlagAtivo(anyLong(), anyString());
 
 		// Then
-		assertEquals(esperado, service.buscarPorServicoDetalhado(1l));
+		assertEquals(esperado, service.buscarAtivosPorServicoDetalhado(1l));
 	}
 
 	@Test
@@ -62,7 +62,7 @@ public class AdicionalServiceTest {
 
 		// Then
 		assertThrows(NotFoundException.class, () -> {
-			service.buscarPorServicoDetalhado(1l);
+			service.buscarAtivosPorServicoDetalhado(1l);
 		});
 	}
 
@@ -144,7 +144,7 @@ public class AdicionalServiceTest {
 		doReturn(Optional.ofNullable(adicional)).when(repository).findById(anyLong());
 		doReturn(adicional).when(repository).save(any());
 		
-		service.desativarAdicional(adicional.getId(), adicional.getServicoDetalhadoId());
+		service.desativarAdicional(adicional.getId(), adicional.getServicoDetalhadoId(), Boolean.FALSE);
 		
 		assertFalse(adicional.getAuditoria().isAtivo());
 	}
@@ -155,10 +155,10 @@ public class AdicionalServiceTest {
 
 		adicional.getAuditoria().setFlagAtivo("N");
 
-		doReturn(Optional.of(adicional)).when(repository).findById(anyLong());
+		doReturn(Optional.of(adicional)).when(repository).findById(1L);
 
 		assertThrows(NotFoundException.class,
-				() -> service.buscarPorId(1L));
+				() -> service.buscarPorId(2L));
 	}
 
 	@Test
@@ -204,7 +204,7 @@ public class AdicionalServiceTest {
 		doReturn(Optional.of(adicionalBuscado)).when(repository).findById(1L);
 
 		assertThrows(BusinessException.class, () ->
-				service.desativarAdicional(1L, 2L));
+				service.desativarAdicional(1L, 2L, Boolean.FALSE));
 	}
 
 	@Test

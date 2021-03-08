@@ -9,6 +9,7 @@ import hyve.petshow.repository.ClienteRepository;
 import hyve.petshow.service.port.ClienteService;
 import hyve.petshow.util.GeoLocUtils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +17,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static hyve.petshow.util.AuditoriaUtils.*;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
 import static hyve.petshow.util.OkHttpUtils.getRequest;
 
+@Slf4j
 @Service
 public class ClienteServiceImpl implements ClienteService {
 	private static final String CONTA_NAO_ENCONTRADA = "CONTA_NAO_ENCONTRADA";//"Conta não encontrada";
@@ -27,6 +30,7 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Override
 	public Cliente buscarPorId(Long id) throws NotFoundException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarPorId", id);
 		var cliente = repository.findById(id)
 				.orElseThrow(() -> new NotFoundException(CONTA_NAO_ENCONTRADA));
 
@@ -40,6 +44,7 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Override
 	public Cliente atualizarConta(Long id, Cliente request) throws NotFoundException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "atualizarConta", id, request);
 		var conta = buscarPorId(id);
 
 		conta.setTelefone(request.getTelefone());
@@ -51,6 +56,7 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 	
 	private Geolocalizacao geraGeolocalizacao(Endereco endereco) {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "geraGeolocalizacao", endereco);
 		var geolocalizacao = new Geolocalizacao();
     	try {
     		var url = GeoLocUtils.geraUrl(endereco);
@@ -66,6 +72,7 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Override
 	public MensagemRepresentation desativarConta(Long id) throws NotFoundException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "desativarConta", id);
 		var cliente = buscarPorId(id);
 		var mensagem = new MensagemRepresentation();
 
@@ -80,6 +87,7 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Override
 	public Optional<Cliente> buscarPorEmail(String email) {
+		log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarPorEmail", email);
 		return repository.findByEmail(email);
 	}
 }

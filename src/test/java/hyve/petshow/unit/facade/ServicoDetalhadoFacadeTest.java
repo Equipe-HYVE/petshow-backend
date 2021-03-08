@@ -93,7 +93,7 @@ public class ServicoDetalhadoFacadeTest {
         doReturn(prestadorRepresentation).when(prestadorConverter).toRepresentation(any(Prestador.class));
         doReturn(servicoDetalhado).when(servicoDetalhadoService).buscarPorPrestadorIdEServicoId(anyLong(), anyLong());
         doReturn(servicoDetalhadoRepresentation).when(servicoDetalhadoConverter).toRepresentation(any(ServicoDetalhado.class));
-        doReturn(adicionais).when(adicionalService).buscarPorServicoDetalhado(anyLong());
+        doReturn(adicionais).when(adicionalService).buscarAtivosPorServicoDetalhado(anyLong());
         doReturn(adicionaisRepresentation).when(adicionalConverter).toRepresentationList(anyList());
         doReturn(adicional).when(adicionalConverter).toDomain(any(AdicionalRepresentation.class));
         doReturn(adicional).when(adicionalService).criarAdicional(any(Adicional.class), anyLong());
@@ -101,7 +101,7 @@ public class ServicoDetalhadoFacadeTest {
         doReturn(servicosDetalhados).when(servicoDetalhadoService).buscarServicosDetalhadosPorIds(anyList());
         doReturn(servicosDetalhadosRepresentation).when(servicoDetalhadoConverter).toRepresentationList(anyList());
         doReturn(adicional).when(adicionalService).atualizarAdicional(anyLong(), any(Adicional.class));
-        doReturn(TRUE).when(adicionalService).desativarAdicional(anyLong(), anyLong());
+        doReturn(adicional).when(adicionalService).desativarAdicional(anyLong(), anyLong(), anyBoolean());
     }
 
     @Test
@@ -120,7 +120,7 @@ public class ServicoDetalhadoFacadeTest {
 
     @Test
     public void deve_buscar_adicionais() throws Exception {
-        var actual = servicoDetalhadoFacade.buscarAdicionais(1L, 1L);
+        var actual = servicoDetalhadoFacade.buscarAdicionais(1L, 1L, TRUE);
 
         assertEquals(adicionaisRepresentation, actual);
     }
@@ -148,8 +148,8 @@ public class ServicoDetalhadoFacadeTest {
 
     @Test
     public void deve_desativar_adicional() throws Exception {
-        var actual = servicoDetalhadoFacade.desativarAdicional(1L, 1L, 1L);
+        var actual = servicoDetalhadoFacade.desativarAdicional(1L, 1L, 1L, TRUE);
 
-        assertEquals(mensagemRepresentation, actual);
+        assertEquals(adicionalRepresentation, actual);
     }
 }

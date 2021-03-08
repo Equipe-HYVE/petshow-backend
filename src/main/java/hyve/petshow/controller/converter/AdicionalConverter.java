@@ -17,6 +17,7 @@ public class AdicionalConverter implements Converter<Adicional, AdicionalReprese
 			representation.setNome(adicional.getNome());
 			representation.setPreco(adicional.getPreco());
 			representation.setServicoDetalhadoId(adicional.getServicoDetalhadoId());
+			representation.setAtivo(domain.getAuditoria().isAtivo());
 			return representation;
 		}).orElse(new AdicionalRepresentation());
 	}

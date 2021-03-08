@@ -10,11 +10,16 @@ import io.swagger.v3.oas.annotations.info.Info;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
+
+@Slf4j
 @RestController
 @RequestMapping("/prestador")
 @OpenAPIDefinition(info = @Info(title = "API prestador", description = "API para CRUD de prestador"))
@@ -29,6 +34,7 @@ public class PrestadorController {
 	public ResponseEntity<PrestadorRepresentation> buscarPrestadorPorId(
 			@Parameter(description = "Id do prestador.")
 			@PathVariable Long id) throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/prestador/{}", id);
 		var prestador = service.buscarPorId(id);
 		var representation = converter.toRepresentation(prestador);
 
@@ -42,17 +48,11 @@ public class PrestadorController {
 			@PathVariable Long id,
 			@Parameter(description = "Prestador que será atualizado.")
 			@RequestBody PrestadorRepresentation request) throws Exception {
+		log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/prestador/{}", request, id);
 		var prestador = converter.toDomain(request);
 		prestador = service.atualizarConta(id, prestador);
 		var representation = converter.toRepresentation(prestador);
 
 		return ResponseEntity.status(HttpStatus.OK).body(representation);
-	}
-	
-	@Operation(summary = "Busca prestadores com base em geolocalização")
-	@GetMapping("/geolocalizacao")
-	public ResponseEntity<List<PrestadorRepresentation>> buscaPorGeolocalizacao() {
-		return null;
-		
 	}
 }
