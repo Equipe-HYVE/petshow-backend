@@ -41,6 +41,7 @@ public class ServicoDetalhadoSpecification {
             predicate = adicionaFiltroPrecoMaximo(filtragem, root, builder, predicate, subQueryFiltrarPreco, subQueryTiposAnimaisAceitos);
 
             adicionaOrdenacao(filtragem, root, query, builder, tiposAnimaisAceitos);
+            query.distinct(true);
 
             return predicate;
         };
@@ -110,20 +111,33 @@ public class ServicoDetalhadoSpecification {
     		var geolocNegativa = geraGeolocalizacaoNegativa(filtragem.getPosicaoAtual(), filtragem.getMetrosGeoloc());
     		
 			predicate = builder.and(predicate,
-					builder.equal(queryPrestador.select(prestador.get("id"))
+					builder.in(root.get("prestadorId")).value(queryPrestador.select(prestador.get("id"))
 							.where(builder.and(builder.or(builder.and(prestador.get("empresa").isNull(),
 									builder.between(prestador.get("geolocalizacao").get("geolocLongitude"),
 											geolocPositiva.getGeolocLongitude(), geolocNegativa.getGeolocLongitude()),
 									builder.between(prestador.get("geolocalizacao").get("geolocLatitude"),
 											geolocPositiva.getGeolocLatitude(), geolocNegativa.getGeolocLatitude())
-
 							), builder.and(prestador.get("empresa").isNotNull(),
 									builder.between(prestador.get("empresa").get("geolocalizacao").get("geolocLongitude"),
 											geolocPositiva.getGeolocLongitude(), geolocNegativa.getGeolocLongitude()),
 									builder.between(prestador.get("empresa").get("geolocalizacao").get("geolocLatitude"),
-											geolocPositiva.getGeolocLatitude(), geolocNegativa.getGeolocLatitude())))),
-									builder.equal(prestador.get("id"), root.get("id"))),
-							root.get("prestadorId")));
+											geolocPositiva.getGeolocLatitude(), geolocNegativa.getGeolocLatitude())))))));
+			
+			
+//					builder.equal(queryPrestador.select(prestador.get("id"))
+//							.where(builder.and(builder.or(builder.and(prestador.get("empresa").isNull(),
+//									builder.between(prestador.get("geolocalizacao").get("geolocLongitude"),
+//											geolocPositiva.getGeolocLongitude(), geolocNegativa.getGeolocLongitude()),
+//									builder.between(prestador.get("geolocalizacao").get("geolocLatitude"),
+//											geolocPositiva.getGeolocLatitude(), geolocNegativa.getGeolocLatitude())
+//
+//							), builder.and(prestador.get("empresa").isNotNull(),
+//									builder.between(prestador.get("empresa").get("geolocalizacao").get("geolocLongitude"),
+//											geolocPositiva.getGeolocLongitude(), geolocNegativa.getGeolocLongitude()),
+//									builder.between(prestador.get("empresa").get("geolocalizacao").get("geolocLatitude"),
+//											geolocPositiva.getGeolocLatitude(), geolocNegativa.getGeolocLatitude())))),
+//									builder.equal(prestador.get("id"), root.get("id"))),
+//							root.get("prestadorId")));
     	}
 
     	return predicate;
