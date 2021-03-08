@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
 import static hyve.petshow.util.PagingAndSortingUtils.geraPageable;
 
+@Slf4j
 @RestController
 @OpenAPIDefinition(info = @Info(title = "API animal de estimação",
         description = "API para CRUD de animal de estimação"))
@@ -41,6 +45,7 @@ public class AnimalEstimacaoController {
     public ResponseEntity<AnimalEstimacaoRepresentation> adicionarAnimalEstimacao(
             @Parameter(description = "Animal que será inserido no sistema.")
             @RequestBody AnimalEstimacaoRepresentation request){
+        log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/cliente/animal-estimacao", request);
         var animalEstimacao = animalEstimacaoConverter.toDomain(request);
 
         animalEstimacao = animalEstimacaoService.adicionarAnimalEstimacao(animalEstimacao);
@@ -59,6 +64,7 @@ public class AnimalEstimacaoController {
             @RequestParam("pagina") Integer pagina,
             @Parameter(description = "Número de itens")
             @RequestParam("quantidadeItens") Integer quantidadeItens) throws NotFoundException {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/cliente/{}/animal-estimacao?pagina={}&quantidadeItens={}", donoId, pagina, quantidadeItens);
         var animaisEstimacao = animalEstimacaoService.buscarAnimaisEstimacaoPorDono(donoId, geraPageable(pagina, quantidadeItens));
 
         var representation = animalEstimacaoConverter.toRepresentationPage(animaisEstimacao);
@@ -73,6 +79,7 @@ public class AnimalEstimacaoController {
             @PathVariable Long id,
             @Parameter(description = "Animal que será atualizado.")
             @RequestBody AnimalEstimacaoRepresentation request) throws NotFoundException, BusinessException {
+        log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/cliente/animal-estimacao/{}", request, id);
         var animalEstimacao = animalEstimacaoConverter.toDomain(request);
 
         animalEstimacao = animalEstimacaoService.atualizarAnimalEstimacao(id, animalEstimacao);
@@ -89,6 +96,7 @@ public class AnimalEstimacaoController {
             @PathVariable Long donoId,
             @Parameter(description = "Id do animal de estimação que será deletado.")
             @PathVariable Long id) throws BusinessException, NotFoundException {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/cliente/{}/animal-estimacao/{}", donoId, id);
         var response = animalEstimacaoService.removerAnimalEstimacao(id, donoId);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -98,6 +106,7 @@ public class AnimalEstimacaoController {
     @GetMapping("/cliente/animal-estimacao/tipos")
     public ResponseEntity<List<TipoAnimalEstimacaoRepresentation>> buscarTiposAnimalEstimacao()
             throws NotFoundException {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/cliente/animal-estimacao/tipos");
         var tiposAnimalEstimacao = tipoAnimalEstimacaoService.buscarTiposAnimalEstimacao();
 
         var representation = tipoAnimalEstimacaoConverter.toRepresentationList(tiposAnimalEstimacao);

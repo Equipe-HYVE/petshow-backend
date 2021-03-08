@@ -1,10 +1,13 @@
 package hyve.petshow.controller;
 
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE;
 import static hyve.petshow.util.PagingAndSortingUtils.geraPageableOrdemMaisNovo;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -31,6 +34,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.info.Info;
 
+@Slf4j
 @RestController
 @RequestMapping("/agendamento")
 @OpenAPIDefinition(info = @Info(title = "API agendamento", description = "API para CRUD de agendamento"))
@@ -57,6 +61,7 @@ public class AgendamentoController {
     public ResponseEntity<AgendamentoRepresentation> adicionarAgendamento(
             @Parameter(description = "Agendamento que será inserido")
             @RequestBody AgendamentoRepresentation request) throws Exception {
+        log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/agendamento", request);
         var agendamento = agendamentoFacade.adicionarAgendamento(request);
 
         return ResponseEntity.ok(agendamento);
@@ -71,6 +76,7 @@ public class AgendamentoController {
             @RequestParam("pagina") Integer pagina,
             @Parameter(description = "Número de itens")
             @RequestParam("quantidadeItens") Integer quantidadeItens) throws Exception {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/cliente/{}?pagina={}&quantidadeItens={}", id, pagina, quantidadeItens);
         var agendamentos = agendamentoService.buscarAgendamentosPorCliente(id, geraPageableOrdemMaisNovo(pagina, quantidadeItens));
         var representation = agendamentoConverter.toRepresentationPage(agendamentos);
 
@@ -86,6 +92,7 @@ public class AgendamentoController {
             @RequestParam("pagina") Integer pagina,
             @Parameter(description = "Número de itens")
             @RequestParam("quantidadeItens") Integer quantidadeItens) throws Exception {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/prestador/{}?pagina={}&quantidadeItens={}", id, pagina, quantidadeItens);
         var agendamentos = agendamentoService.buscarAgendamentosPorPrestador(id, geraPageableOrdemMaisNovo(pagina, quantidadeItens));
         var representation = agendamentoConverter.toRepresentationPage(agendamentos);
 
@@ -99,6 +106,7 @@ public class AgendamentoController {
             @PathVariable Long id,
             @Parameter(description = "Id do usuario que realiza a busca, para verificar se o mesmo pode ter acesso às informações")
             @PathVariable Long usuarioId) throws Exception {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/{}/usuario/{}", id, usuarioId);
         var agendamento = agendamentoService.buscarPorIdAtivo(id, usuarioId);
         var representation = agendamentoConverter.toRepresentation(agendamento);
 
@@ -108,6 +116,7 @@ public class AgendamentoController {
     @Operation(summary = "Retorna todos os status de agendamento")
     @GetMapping("/statuses")
     public ResponseEntity<List<StatusAgendamentoRepresentation>> buscarStatusAgendamento() throws NotFoundException {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/statuses");
         var statuses = statusAgendamentoService.buscarStatusAgendamento();
         var representation = statusAgendamentoConverter.toRepresentationList(statuses);
 
@@ -123,6 +132,7 @@ public class AgendamentoController {
             @PathVariable Long prestadorId,
             @Parameter(description = "Id do novo status do agendamento")
             @PathVariable Integer statusId) throws NotFoundException, BusinessException {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/{}/prestador/{}/status/{}", id, prestadorId, statusId);
         var mensagem = new MensagemRepresentation();
         var response = agendamentoFacade.atualizarStatusAgendamento(id, prestadorId, statusId);
 
@@ -140,6 +150,7 @@ public class AgendamentoController {
             @Parameter(description = "Avaliação que será inserida")
             @RequestBody AvaliacaoRepresentation request)
             throws Exception {
+        log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/agendamento/{}/avaliacao", request, id);
         var avaliacao = avaliacaoFacade.adicionarAvaliacao(request, id);
         var representation = avaliacaoConverter.toRepresentation(avaliacao);
 
@@ -152,6 +163,7 @@ public class AgendamentoController {
             @Parameter(description = "Id do agendamento.")
             @PathVariable Long id)
             throws Exception {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/{}/avaliacao", id);
         var avaliacao = avaliacaoService.buscarAvaliacaoPorAgendamentoId(id);
         var representation = avaliacaoConverter.toRepresentation(avaliacao);
 
@@ -166,7 +178,10 @@ public class AgendamentoController {
     		@Parameter(description = "Data do agendamento")
     		@RequestParam("dataAgendamento") 
     		@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataAgendamento) {
-    	return ResponseEntity.ok(agendamentoFacade.buscaHorariosAgendamento(idPrestador, dataAgendamento));
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/prestador/{}/horarios?dataAgendamento={}", idPrestador, dataAgendamento);
+        var representation = agendamentoFacade.buscaHorariosAgendamento(idPrestador, dataAgendamento);
+
+    	return ResponseEntity.ok(representation);
     }
 
     @Operation(summary = "Deleta agendamento")
@@ -176,6 +191,7 @@ public class AgendamentoController {
             @PathVariable Long agendamentoId,
             @Parameter(description = "Id do cliente")
             @PathVariable Long clienteId) throws NotFoundException, BusinessException {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/{}/cliente/{}", agendamentoId, clienteId);
         agendamentoService.deletarAgendamento(agendamentoId, clienteId);
 
         return ResponseEntity.noContent().build();
@@ -188,6 +204,7 @@ public class AgendamentoController {
             @PathVariable Long agendamentoId,
             @Parameter(description = "Id do cliente")
             @PathVariable Long clienteId) throws NotFoundException, BusinessException {
+        log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/{}/cliente/{}", agendamentoId, clienteId);
         var agendamento = agendamentoService.ativarAgendamento(agendamentoId, clienteId);
         var representation = agendamentoConverter.toRepresentation(agendamento);
 

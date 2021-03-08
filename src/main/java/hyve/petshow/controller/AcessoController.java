@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_CONTROLLER_BODY_MESSAGE;
+
 @Slf4j
 @RestController
 @RequestMapping("/acesso")
@@ -54,6 +56,7 @@ public class AcessoController {
             @Parameter(description = "Objeto utilizado para realizar o login.")
             @RequestBody Login login) throws Exception {
         try {
+            log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/acesso/login", login.getEmail());
             realizarAutenticacao(login);
             var token = gerarToken(login.getEmail());
 
@@ -72,6 +75,7 @@ public class AcessoController {
             @RequestBody ContaRepresentation contaRepresentation,
             @Parameter(description = "Requisição")
             HttpServletRequest request) throws Exception {
+        log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/acesso/cadastro", contaRepresentation.getLogin().getEmail());
         verificarEmailExistente(contaRepresentation.getLogin().getEmail());
         var conta = adicionarConta(contaRepresentation);
         var token = gerarToken(conta);
@@ -89,6 +93,7 @@ public class AcessoController {
 			@RequestBody PrestadorRepresentation representation,
 			@Parameter(description = "Requisição")
 			HttpServletRequest request) throws Exception {
+        log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/acesso/cadastro/empresa", representation.getLogin().getEmail());
     	verificarEmailExistente(representation.getLogin().getEmail());
     	var prestador = acessoFacade.salvaPrestador(representation);
     	var domain = contaConverter.toDomain(prestador);
@@ -102,6 +107,7 @@ public class AcessoController {
 
     @GetMapping("/ativar")
     public ResponseEntity<String> confirmarRegistro(@RequestParam("token") String tokenVerificadcao) throws Exception {
+        log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/acesso/ativar", tokenVerificadcao);
         var conta = acessoService.ativaConta(tokenVerificadcao);
         var tokenRetorno = gerarToken(conta.getLogin().getEmail());
         return ResponseEntity.ok(tokenRetorno);
@@ -114,6 +120,7 @@ public class AcessoController {
             @RequestBody String email,
             @Parameter(description = "Requisição")
                     HttpServletRequest request) throws Exception {
+        log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/acesso/reenvia-ativacao", email);
         var conta = acessoService.buscarConta(email);
         var appUrl = request.getContextPath();
         var event = new OnRegistrationCompleteEvent(conta, request.getLocale(), appUrl);

@@ -18,8 +18,10 @@ import hyve.petshow.service.port.AcessoService;
 import static hyve.petshow.util.GeoLocUtils.geraUrl;
 import static hyve.petshow.util.GeoLocUtils.mapeiaJson;
 
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
 import static hyve.petshow.util.OkHttpUtils.getRequest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +34,7 @@ import java.util.Optional;
 
 import static hyve.petshow.util.AuditoriaUtils.*;
 
+@Slf4j
 @Service
 public class AcessoServiceImpl implements AcessoService {
 	
@@ -53,6 +56,7 @@ public class AcessoServiceImpl implements AcessoService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "loadUserByUsername", email);
         var conta = acessoRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(CONTA_NAO_ENCONTRADA));
         var login = conta.getLogin();
@@ -62,12 +66,14 @@ public class AcessoServiceImpl implements AcessoService {
 
     @Override
     public Optional<Conta> buscarPorEmail(String email) {
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarPorEmail", email);
         var conta = acessoRepository.findByEmail(email);
         return conta;
     }
 
     @Override
     public Conta adicionarConta(Conta conta) throws BusinessException {
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "adicionarConta", conta);
         var tipoConta = conta.getTipo();
         criptografarSenha(conta.getLogin());
 
@@ -87,6 +93,7 @@ public class AcessoServiceImpl implements AcessoService {
     }
 
     private Geolocalizacao geraGeoloc(Endereco endereco) {
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "geraGeoloc", endereco);
     	var geolocalizacao = new Geolocalizacao();
     	try {
     		var url = geraUrl(endereco);
@@ -101,30 +108,35 @@ public class AcessoServiceImpl implements AcessoService {
 	}
 
 	private void criptografarSenha(Login login){
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "criptografarSenha", login);
         var senha = login.getSenha();
         login.setSenha(passwordEncoder.encode(senha));
     }
 
     public Conta buscarConta(String email) throws Exception {
-    	return buscarPorEmail(email)
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarConta", email);
+        return buscarPorEmail(email)
                 .orElseThrow(() -> new NotFoundException(CONTA_NAO_ENCONTRADA));
     }
 
 	@Override
 	public Conta criaTokenVerificacao(Conta conta, String token) {
-		var verificationToken = new VerificationToken(conta, token);
+        log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "criaTokenVerificacao", conta, token);
+        var verificationToken = new VerificationToken(conta, token);
 		tokenRepository.save(verificationToken);
 		return conta;
 	}
 
 	@Override
 	public VerificationToken buscarTokenVerificacao(String tokenVerificadcao) throws Exception {
-		return tokenRepository.findByToken(tokenVerificadcao)
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarTokenVerificacao", tokenVerificadcao);
+        return tokenRepository.findByToken(tokenVerificadcao)
                 .orElseThrow(() -> new NotFoundException(TOKEN_NAO_ENCONTRADO));
 	}
 
 	@Override
 	public Conta ativaConta(String token) throws Exception {
+        log.info(INFO_REQUEST_SERVICE.concat("{}"), "ativaConta", token);
 		var tokenVerificacao = buscarTokenVerificacao(token);
 		var conta = buscarConta(tokenVerificacao.getConta().getEmail());
 		if(conta.isAtivo()) {
