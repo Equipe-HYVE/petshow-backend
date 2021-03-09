@@ -21,6 +21,7 @@ import hyve.petshow.controller.converter.StatusAgendamentoConverter;
 import hyve.petshow.controller.representation.AgendamentoRepresentation;
 import hyve.petshow.controller.representation.AvaliacaoRepresentation;
 import hyve.petshow.controller.representation.MensagemRepresentation;
+import hyve.petshow.controller.representation.NegociacaoRepresentation;
 import hyve.petshow.controller.representation.StatusAgendamentoRepresentation;
 import hyve.petshow.exceptions.BusinessException;
 import hyve.petshow.exceptions.NotFoundException;
@@ -39,22 +40,22 @@ import io.swagger.v3.oas.annotations.info.Info;
 @RequestMapping("/agendamento")
 @OpenAPIDefinition(info = @Info(title = "API agendamento", description = "API para CRUD de agendamento"))
 public class AgendamentoController {
-    @Autowired
-    private AgendamentoService agendamentoService;
-    @Autowired
-    private StatusAgendamentoService statusAgendamentoService;
-    @Autowired
-    private AvaliacaoService avaliacaoService;
-    @Autowired
-    private AgendamentoFacade agendamentoFacade;
-    @Autowired
-    private AvaliacaoFacade avaliacaoFacade;
-    @Autowired
-    private AgendamentoConverter agendamentoConverter;
-    @Autowired
-    private StatusAgendamentoConverter statusAgendamentoConverter;
-    @Autowired
-    private AvaliacaoConverter avaliacaoConverter;
+	@Autowired
+	private AgendamentoService agendamentoService;
+	@Autowired
+	private StatusAgendamentoService statusAgendamentoService;
+	@Autowired
+	private AvaliacaoService avaliacaoService;
+	@Autowired
+	private AgendamentoFacade agendamentoFacade;
+	@Autowired
+	private AvaliacaoFacade avaliacaoFacade;
+	@Autowired
+	private AgendamentoConverter agendamentoConverter;
+	@Autowired
+	private StatusAgendamentoConverter statusAgendamentoConverter;
+	@Autowired
+	private AvaliacaoConverter avaliacaoConverter;
 
     @Operation(summary = "Adiciona um novo agendamento.")
     @PostMapping
@@ -64,8 +65,8 @@ public class AgendamentoController {
         log.info(INFO_REQUEST_CONTROLLER_BODY_MESSAGE, "/agendamento", request);
         var agendamento = agendamentoFacade.adicionarAgendamento(request);
 
-        return ResponseEntity.ok(agendamento);
-    }
+		return ResponseEntity.ok(agendamento);
+	}
 
     @Operation(summary = "Recupera todos os agendamentos por cliente.")
     @GetMapping("/cliente/{id}")
@@ -80,8 +81,8 @@ public class AgendamentoController {
         var agendamentos = agendamentoService.buscarAgendamentosPorCliente(id, geraPageableOrdemMaisNovo(pagina, quantidadeItens));
         var representation = agendamentoConverter.toRepresentationPage(agendamentos);
 
-        return ResponseEntity.ok(representation);
-    }
+		return ResponseEntity.ok(representation);
+	}
 
     @Operation(summary = "Recupera todos os agendamentos por prestador.")
     @GetMapping("/prestador/{id}")
@@ -96,8 +97,8 @@ public class AgendamentoController {
         var agendamentos = agendamentoService.buscarAgendamentosPorPrestador(id, geraPageableOrdemMaisNovo(pagina, quantidadeItens));
         var representation = agendamentoConverter.toRepresentationPage(agendamentos);
 
-        return ResponseEntity.ok(representation);
-    }
+		return ResponseEntity.ok(representation);
+	}
 
     @Operation(summary = "Recupera um agendamento por ID.")
     @GetMapping("/{id}/usuario/{usuarioId}")
@@ -110,8 +111,8 @@ public class AgendamentoController {
         var agendamento = agendamentoService.buscarPorIdAtivo(id, usuarioId);
         var representation = agendamentoConverter.toRepresentation(agendamento);
 
-        return ResponseEntity.ok(representation);
-    }
+		return ResponseEntity.ok(representation);
+	}
 
     @Operation(summary = "Retorna todos os status de agendamento")
     @GetMapping("/statuses")
@@ -136,11 +137,11 @@ public class AgendamentoController {
         var mensagem = new MensagemRepresentation();
         var response = agendamentoFacade.atualizarStatusAgendamento(id, prestadorId, statusId);
 
-        mensagem.setId(id);
-        mensagem.setSucesso(response);
+		mensagem.setId(id);
+		mensagem.setSucesso(response);
 
-        return ResponseEntity.ok(mensagem);
-    }
+		return ResponseEntity.ok(mensagem);
+	}
 
     @Operation(summary = "Adiciona avaliação.")
     @PostMapping("/{id}/avaliacao")
@@ -154,8 +155,8 @@ public class AgendamentoController {
         var avaliacao = avaliacaoFacade.adicionarAvaliacao(request, id);
         var representation = avaliacaoConverter.toRepresentation(avaliacao);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(representation);
-    }
+		return ResponseEntity.status(HttpStatus.CREATED).body(representation);
+	}
 
     @Operation(summary = "Busca avaliação por agendamento.")
     @GetMapping("/{id}/avaliacao")
@@ -194,8 +195,8 @@ public class AgendamentoController {
         log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/{}/cliente/{}", agendamentoId, clienteId);
         agendamentoService.deletarAgendamento(agendamentoId, clienteId);
 
-        return ResponseEntity.noContent().build();
-    }
+		return ResponseEntity.noContent().build();
+	}
 
     @Operation(summary = "Ativa agendamento")
     @PatchMapping("/{agendamentoId}/cliente/{clienteId}")
@@ -208,7 +209,17 @@ public class AgendamentoController {
         var agendamento = agendamentoService.ativarAgendamento(agendamentoId, clienteId);
         var representation = agendamentoConverter.toRepresentation(agendamento);
 
-        return ResponseEntity.ok(representation);
-    }
-}
+		return ResponseEntity.ok(representation);
+	}
 
+	@Operation(summary = "Confirma negociação")
+	@PatchMapping("/{agendamentoId}/prestador/{prestadorId}/negociacao")
+	public ResponseEntity<AgendamentoRepresentation> confirmaNegociacao(
+			@Parameter(description = "Id do agendamento") @PathVariable Long agendamentoId,
+			@Parameter(description = "Id do prestador") @PathVariable Long prestadorId,
+			@RequestBody NegociacaoRepresentation negociacaoRepresentation)
+			throws NotFoundException, BusinessException {
+		var agendamento = agendamentoFacade.confirmaNegociacao(agendamentoId, prestadorId, negociacaoRepresentation);
+		return ResponseEntity.ok(agendamento);
+	}
+}

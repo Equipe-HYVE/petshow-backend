@@ -41,4 +41,11 @@ public class StatusAgendamentoServiceImpl extends TipoService<StatusAgendamento>
         return repository.findById(statusId)
                 .orElseThrow(() -> new NotFoundException(NENHUM_STATUS_AGENDAMENTO_ENCONTRADO));
     }
+
+	@Override
+	public StatusAgendamento buscarStatusPorNome(String nome) throws NotFoundException {
+		return repository.findByNome(nome).orElseThrow(() -> new NotFoundException(NENHUM_STATUS_AGENDAMENTO_ENCONTRADO));
+	}
+    
+    
 }
