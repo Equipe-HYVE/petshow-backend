@@ -208,14 +208,14 @@ public class AgendamentoController {
         return ResponseEntity.ok(representation);
     }
 
-    @Operation(summary = "Confirma negociação")
-    @PatchMapping("/{agendamentoId}/prestador/{prestadorId}/negociacao")
-    public ResponseEntity<AgendamentoRepresentation> confirmaNegociacao(
-            @Parameter(description = "Id do agendamento") @PathVariable Long agendamentoId,
-            @Parameter(description = "Id do prestador") @PathVariable Long prestadorId,
-            @RequestBody NegociacaoRepresentation negociacaoRepresentation)
-            throws NotFoundException, BusinessException {
-        var agendamento = agendamentoFacade.confirmaNegociacao(agendamentoId, prestadorId, negociacaoRepresentation);
-        return ResponseEntity.ok(agendamento);
-    }
+	@Operation(summary = "Confirma negociação")
+	@PatchMapping("/{agendamentoId}/prestador/{prestadorId}/negociacao")
+	public ResponseEntity<AgendamentoRepresentation> confirmaNegociacao(
+			@Parameter(description = "Id do agendamento") @PathVariable Long agendamentoId,
+			@Parameter(description = "Id do prestador") @PathVariable Long prestadorId,
+			@RequestBody NegociacaoRepresentation negociacaoRepresentation)
+			throws NotFoundException, BusinessException {
+		var agendamento = agendamentoFacade.confirmaNegociacao(agendamentoId, prestadorId, negociacaoRepresentation);
+		return ResponseEntity.ok(agendamento);
+	}
 }
