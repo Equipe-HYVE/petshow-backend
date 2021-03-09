@@ -35,7 +35,7 @@ public class Agendamento {
     @JoinColumn(name = "fk_servico_detalhado")
     private ServicoDetalhado servicoDetalhado;
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "fk_agendamento")
+    @JoinColumn(name = "fk_negociacao")
     private Negociacao negociacao;
     @OneToMany(mappedBy = "agendamento", cascade = CascadeType.ALL)
     private List<AnimalEstimacaoAgendamento> animaisAtendidos = new ArrayList<>();
