@@ -27,6 +27,8 @@ public class AgendamentoConverter implements Converter<Agendamento, AgendamentoR
     private AnimalEstimacaoConverter animalConverter;
     @Autowired
     private AdicionalConverter adicionalConverter;
+    @Autowired
+    private NegociacaoConverter negociacaoConverter;
 
     @Override
     public AgendamentoRepresentation toRepresentation(Agendamento domain) {
@@ -54,6 +56,7 @@ public class AgendamentoConverter implements Converter<Agendamento, AgendamentoR
                 adicionalConverter.toRepresentationList(domain.getAdicionais().stream()
                         .map(adicionalAgendamento -> adicionalAgendamento.getAdicional())
                         .collect(Collectors.toList())));
+        representation.setNegociacao(negociacaoConverter.toRepresentation(domain.getNegociacao()));
 
         return representation;
     }
@@ -73,6 +76,8 @@ public class AgendamentoConverter implements Converter<Agendamento, AgendamentoR
         adicionalConverter.toDomainList(representation.getAdicionais()).stream()
                 .forEach(adicionais -> domain.getAdicionais()
                         .add(new AdicionalAgendamento(domain, adicionais)));
+        
+        domain.setNegociacao(negociacaoConverter.toDomain(representation.getNegociacao()));
 
         return domain;
     }

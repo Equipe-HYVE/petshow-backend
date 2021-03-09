@@ -12,6 +12,7 @@ import hyve.petshow.domain.Prestador;
 import hyve.petshow.service.port.AcessoService;
 import hyve.petshow.service.port.EmpresaService;
 import hyve.petshow.service.port.PrestadorService;
+import hyve.petshow.util.AuditoriaUtils;
 
 @Component
 public class AcessoFacade {
@@ -38,7 +39,7 @@ public class AcessoFacade {
 
 		var empresaSalva = empresaService.salvarEmpresa(empresa, prestador.getId());
 		prestador.setEmpresa(empresaSalva);
-		prestadorService.atualizarConta(prestador.getId(), prestador);
+		prestadorService.atualizarConta(prestador.getId(), prestador, AuditoriaUtils.INATIVO);
 		return prestadorConverter.toRepresentation(prestadorService.buscarPorId(prestador.getId()));
 	}
 }

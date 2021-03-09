@@ -37,8 +37,6 @@ public class AgendamentoServiceImpl implements AgendamentoService {
     public Agendamento adicionarAgendamento(Agendamento agendamento) {
         log.info(INFO_REQUEST_SERVICE.concat("{}"), "adicionarAgendamento", agendamento);
         agendamento.setAuditoria(geraAuditoriaInsercao(Optional.of(agendamento.getCliente().getId())));
-        //Insere inativo como pré-agendamento
-        agendamento.getAuditoria().setFlagAtivo(INATIVO);
 
         return repository.save(agendamento);
     }
@@ -154,4 +152,15 @@ public class AgendamentoServiceImpl implements AgendamentoService {
 
         repository.delete(agendamento);
     }
+
+	@Override
+	public Agendamento atualizarAgendamento(Long agendamentoId, Agendamento agendamentoAtualizado) throws NotFoundException, BusinessException {
+		var agendamento = buscarPorId(agendamentoId, agendamentoAtualizado.getCliente().getId());
+		agendamento.setStatus(agendamentoAtualizado.getStatus());
+		agendamento.setNegociacao(agendamentoAtualizado.getNegociacao());
+		agendamento = repository.save(agendamento);
+		return agendamento;
+	}
+    
+    
 }

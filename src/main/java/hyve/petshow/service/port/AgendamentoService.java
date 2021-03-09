@@ -33,5 +33,7 @@ public interface AgendamentoService {
     Agendamento buscarPorId(Long id, Long usuarioId) throws BusinessException, NotFoundException;
 
     void deletarAgendamento(Long agendamentoId, Long clienteId) throws NotFoundException, BusinessException;
+    
+    Agendamento atualizarAgendamento(Long agendamentoId, Agendamento agendamento) throws NotFoundException, BusinessException;
 
 }

@@ -5,4 +5,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface PrestadorService extends ContaService<Prestador> {
+	Prestador atualizarConta(Long id, Prestador request, String ativo) throws Exception;
 }
