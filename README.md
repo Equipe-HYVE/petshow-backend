@@ -1,0 +1,2 @@
+# petshow-backend
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4b8acf06574f431eadf0004ac4b841c4)](https://app.codacy.com/gh/Equipe-HYVE/petshow-backend?utm_source=github.com&utm_medium=referral&utm_content=Equipe-HYVE/petshow-backend&utm_campaign=Badge_Grade_Settings)
