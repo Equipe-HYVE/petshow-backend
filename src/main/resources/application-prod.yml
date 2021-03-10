@@ -4,4 +4,4 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     username: ${JDBC_DATABASE_USERNAME}
     password: ${JDBC_DATABASE_PASSWORD}
-  app-url: "https://petshow-frontend.herokuapp.com/"
+  app-url: ${URL_BASE_FRONT}

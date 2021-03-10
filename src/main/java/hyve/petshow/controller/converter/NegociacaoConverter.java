@@ -1,14 +1,13 @@
 package hyve.petshow.controller.converter;
 
-import static hyve.petshow.util.AuditoriaUtils.ATIVO;
-import static hyve.petshow.util.AuditoriaUtils.INATIVO;
+import hyve.petshow.controller.representation.NegociacaoRepresentation;
+import hyve.petshow.domain.Negociacao;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import org.springframework.stereotype.Component;
-
-import hyve.petshow.controller.representation.NegociacaoRepresentation;
-import hyve.petshow.domain.Negociacao;
+import static hyve.petshow.util.AuditoriaUtils.ATIVO;
+import static hyve.petshow.util.AuditoriaUtils.INATIVO;
 import static hyve.petshow.util.NullUtils.isNotNull;
 
 @Component
@@ -21,7 +20,7 @@ public class NegociacaoConverter implements Converter<Negociacao, NegociacaoRepr
 			representation.setId(negociacao.getId());
 			representation.setAgendamentoId(domain.getIdAgendamento());
 			representation.setPrecoInicial(domain.getPrecoInicial());
-			representation.setPrecoOferta(domain.getPrecoOferta());
+			representation.setPrecoOferta(domain.getPrecoOfertado());
 			if (isNotNull(domain.getRespostaOferta())) {
 				representation.setRespostaOferta(ATIVO.equals(domain.getRespostaOferta()));
 			}
@@ -36,7 +35,7 @@ public class NegociacaoConverter implements Converter<Negociacao, NegociacaoRepr
 			var domain = new Negociacao();
 			domain.setId(negociacao.getId());
 			domain.setPrecoInicial(negociacao.getPrecoInicial());
-			domain.setPrecoOferta(negociacao.getPrecoOferta());
+			domain.setPrecoOfertado(negociacao.getPrecoOferta());
 			if(isNotNull(negociacao.getRespostaOferta())) {
 				domain.setRespostaOferta(negociacao.getRespostaOferta() ? ATIVO : INATIVO);
 			}
