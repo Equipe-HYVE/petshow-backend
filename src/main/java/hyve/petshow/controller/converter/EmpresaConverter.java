@@ -20,8 +20,9 @@ public class EmpresaConverter implements Converter<Empresa, EmpresaRepresentatio
 					representation.setEndereco(domain.getEndereco());
 					representation.setNome(domain.getNome());
 					representation.setRazaoSocial(domain.getRazaoSocial());
+					representation.setGeolocalizacao(empresa.getGeolocalizacao());
 					return representation;
-				}).orElse(new EmpresaRepresentation());
+				}).orElse(null);
 	}
 
 	@Override
@@ -34,8 +35,9 @@ public class EmpresaConverter implements Converter<Empresa, EmpresaRepresentatio
 					domain.setEndereco(empresa.getEndereco());
 					domain.setNome(empresa.getNome());
 					domain.setRazaoSocial(empresa.getRazaoSocial());
+					domain.setGeolocalizacao(empresa.getGeolocalizacao());
 					return domain;
-				}).orElse(new Empresa());
+				}).orElse(null);
 	}
 
 }
