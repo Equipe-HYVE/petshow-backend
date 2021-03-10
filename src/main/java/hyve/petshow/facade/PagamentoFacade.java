@@ -25,7 +25,7 @@ import static hyve.petshow.util.TextTranscriptionUtils.transcreveNomeServico;
 
 @Component
 public class PagamentoFacade {
-    private static final String FEEDBACK_SUCCESS_PATH = "/agendamento-sucesso/";
+    private static final String FEEDBACK_PATH = "/agendamento-feedback/";
     private static final String DESCRICAO = "Pagamento para o agendamento do serviço {0} prestado por {1} na data {2}";
     private static final String IDENTIFICATION_TYPE = "CPF";
     private static final List<String> PAGAMENTOS_EXCLUIDOS = Arrays.asList("pec", "bolbradesco");
@@ -62,9 +62,12 @@ public class PagamentoFacade {
         var payer = new Payer();
         var paymentMethods = new PaymentMethods();
         var operacao = Preference.OperationType.regular_payment;
-        var responseUrl = application.getUrlBaseFront().concat(
-                FEEDBACK_SUCCESS_PATH.concat(agendamento.getId().toString()));
-        var backUrls = new BackUrls(responseUrl, responseUrl, responseUrl);
+        var baseUrl = application.getUrlBaseFront().concat(
+                FEEDBACK_PATH.concat(agendamento.getId().toString()));
+        var succesUrl = baseUrl.concat("/success");
+        var pendingUrl = baseUrl.concat("/pending");
+        var failureUrl = baseUrl.concat("/failure");
+        var backUrls = new BackUrls(succesUrl, pendingUrl, failureUrl);
         var endereco = cliente.getEndereco();
 
         item.setEventDate(Date.from(agendamento.getData().atZone(ZoneId.systemDefault()).toInstant()))
