@@ -167,7 +167,7 @@ public class AgendamentoFacade {
 		var negociacao = negociacaoConverter.toDomain(negociacaoRepresentation);
 		negociacao.setIdAgendamento(agendamento.getId());
 		if (negociacaoRepresentation.getRespostaOferta()) {
-			agendamento.setPrecoFinal(negociacao.getPrecoOferta());
+			agendamento.setPrecoFinal(negociacao.getPrecoOfertado());
 		}
 		agendamento.setStatus(
 				statusAgendamentoService.buscarStatusPorNome(StatusAgendamento.PENDENTE_PAGAMENTO.getValue()));
