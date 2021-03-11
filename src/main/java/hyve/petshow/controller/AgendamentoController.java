@@ -189,7 +189,7 @@ public class AgendamentoController {
             @Parameter(description = "Id do cliente")
             @PathVariable Long clienteId) throws NotFoundException, BusinessException {
         log.info(INFO_REQUEST_CONTROLLER_RETRIEVE_MESSAGE, "/agendamento/{}/cliente/{}", agendamentoId, clienteId);
-        agendamentoService.deletarAgendamento(agendamentoId, clienteId);
+        agendamentoFacade.deletarAgendamento(agendamentoId, clienteId);
 
         return ResponseEntity.noContent().build();
     }
