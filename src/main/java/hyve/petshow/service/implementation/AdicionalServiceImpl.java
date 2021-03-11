@@ -87,7 +87,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "atualizarAdicional", idAdicional, adicional);
 		var busca = buscarPorId(idAdicional);
 
-		if(adicional.getServicoDetalhadoId() != busca.getServicoDetalhadoId()){
+		if(! busca.getServicoDetalhadoId().equals(adicional.getServicoDetalhadoId())){
 			throw new BusinessException(ADICIONAL_SERVICO_DIVERGENTE);
 		}
 
@@ -104,7 +104,7 @@ public class AdicionalServiceImpl implements AdicionalService {
 		log.info(INFO_REQUEST_SERVICE.concat("{}, {}, {}"), "desativarAdicional", idAdicional, idServico, ativo);
 		var adicional = buscarPorId(idAdicional);
 
-		if (adicional.getServicoDetalhadoId() != idServico) {
+		if (! idServico.equals(adicional.getServicoDetalhadoId())) {
 			throw new BusinessException(ADICIONAL_SERVICO_DIVERGENTE);
 		}
 

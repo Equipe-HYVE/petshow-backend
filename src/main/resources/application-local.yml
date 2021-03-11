@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/petshow?reconnect=true&serverTimezone=America/Sao_Paulo
+    url: jdbc:mysql://us-cdbr-east-03.cleardb.com/heroku_8d6dc28ad3aca5d
     driverClassName: com.mysql.cj.jdbc.Driver
-    username: root
-    password: root
+    username: ba7e334648dc49
+    password: 103060ba
   app-url: "http://localhost:4200"
   jpa:
      show-sql: false
