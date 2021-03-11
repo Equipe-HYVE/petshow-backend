@@ -1,6 +1,7 @@
 package hyve.petshow.facade;
 
 import static hyve.petshow.util.AuditoriaUtils.geraAuditoriaInsercao;
+import static hyve.petshow.util.LogUtils.INFO_REQUEST_SERVICE;
 import static hyve.petshow.util.NullUtils.isNotNull;
 
 import java.math.BigDecimal;
@@ -34,7 +35,9 @@ import hyve.petshow.service.port.NegociacaoService;
 import hyve.petshow.service.port.PrestadorService;
 import hyve.petshow.service.port.ServicoDetalhadoService;
 import hyve.petshow.service.port.StatusAgendamentoService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class AgendamentoFacade {
 	@Autowired
@@ -175,5 +178,25 @@ public class AgendamentoFacade {
 		
 		var agendamentoAtualizado = agendamentoService.atualizarAgendamento(agendamento.getId(), agendamento);
 		return agendamentoConverter.toRepresentation(agendamentoAtualizado);
+	}
+	
+	public void deletarAgendamento(Long agendamentoId, Long clienteId) throws NotFoundException, BusinessException {
+		log.info(INFO_REQUEST_SERVICE.concat("{}, {}"), "deletarAgendamento", agendamentoId, clienteId);
+		removeNegociacao(agendamentoId);
+		agendamentoService.deletarAgendamento(agendamentoId, clienteId);
+		log.info("remoção de agendamento concluida");
+	}
+
+	private void removeNegociacao(Long agendamentoId) {
+		log.info("remove Negociacao", agendamentoId);
+		try {
+			var negociacao = negociacaoService.buscaPorAgendamentoId(agendamentoId);
+			negociacaoService.removerNegociacao(negociacao.getId());
+		} catch (NotFoundException e) {
+			log.info("Nao existiam negociacoes para esse agendamento");
+			return;
+		} catch (Exception e) {
+			log.error("Erro", e.getMessage());
+		}
 	}
 }

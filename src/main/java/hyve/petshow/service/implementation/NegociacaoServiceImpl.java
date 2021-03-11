@@ -57,4 +57,18 @@ public class NegociacaoServiceImpl implements NegociacaoService {
 		return repository.findById(idNegociacao).orElseThrow(() -> new NotFoundException(NEGOCIACAO_NAO_ENCONTRADA));
 	}
 
+	@Override
+	public Negociacao buscaPorAgendamentoId(Long agendamentoId) throws NotFoundException {
+		return repository.findByIdAgendamento(agendamentoId).orElseThrow(() -> new NotFoundException(NEGOCIACAO_NAO_ENCONTRADA));
+	}
+
+	@Override
+	public void removerNegociacao(Long idNegociacao) throws NotFoundException {
+		var negociacao = buscaPorId(idNegociacao);
+		repository.delete(negociacao);
+	}
+	
+	
+	
+
 }
