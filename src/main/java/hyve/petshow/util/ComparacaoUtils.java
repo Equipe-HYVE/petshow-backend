@@ -7,6 +7,7 @@ import hyve.petshow.controller.representation.PrestadorRepresentation;
 import hyve.petshow.controller.representation.ServicoDetalhadoRepresentation;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +88,7 @@ public class ComparacaoUtils {
 		comparacao.setMenorPreco(geraMenorPreco(representation.getPrecoPorTipo()));
 		comparacao.setTabelaPrecos(representation.getPrecoPorTipo());
 		comparacao.setTiposAtendidos(geraTiposAtendidos(representation.getPrecoPorTipo()));
-		comparacao.setMediaAvaliacao(new BigDecimal(representation.getMedia()).setScale(2));
+		comparacao.setMediaAvaliacao(new BigDecimal(representation.getMedia()).setScale(2, RoundingMode.HALF_EVEN));
 		return comparacao;
 	}
 	
