@@ -88,7 +88,6 @@ public class PrestadorServiceImpl implements PrestadorService {
 
     @Override
     public Optional<Prestador> buscarPorEmail(String email) {
-        log.info(INFO_REQUEST_SERVICE.concat("{}"), "buscarPorEmail", email);
         return repository.findByEmail(email);
     }
 }
