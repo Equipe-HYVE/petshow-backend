@@ -15,4 +15,8 @@ public interface NegociacaoService {
 	Negociacao cancelaNegociacao(Long idNegociacao) throws BusinessException, NotFoundException;
 	
 	Negociacao buscaPorId(Long idNegociacao) throws NotFoundException;
+	
+	Negociacao buscaPorAgendamentoId(Long agendamentoId) throws NotFoundException;
+	
+	void removerNegociacao(Long idNegociacao) throws NotFoundException;
 }
