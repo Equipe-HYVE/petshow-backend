@@ -66,7 +66,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.headers().frameOptions().disable();
+        http.headers()
+                .contentTypeOptions().and()
+                .xssProtection().and()
+                .cacheControl().and()
+                .httpStrictTransportSecurity().and()
+                .frameOptions();
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
