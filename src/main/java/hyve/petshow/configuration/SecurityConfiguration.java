@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 @Configuration
 @EnableWebSecurity
@@ -73,7 +74,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .contentSecurityPolicy("script-src 'self'").and()
                 .referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.SAME_ORIGIN).and()
                 .featurePolicy("accelerometer 'none'; ambient-light-sensor 'none'; " +
-                        "autoplay 'none'; battery 'none';");
+                        "autoplay 'none'; battery 'none';").and()
+                .addHeaderWriter(new StaticHeadersWriter("Permissions-Policy", "fullscreen=(self);camera=()"));
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
