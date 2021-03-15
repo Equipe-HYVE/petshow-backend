@@ -71,7 +71,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .contentTypeOptions().and()
                 .frameOptions().and()
                 .contentSecurityPolicy("script-src 'self'").and()
-                .referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.SAME_ORIGIN);
+                .referrerPolicy(ReferrerPolicyHeaderWriter.ReferrerPolicy.SAME_ORIGIN).and()
+                .featurePolicy("accelerometer 'none'; ambient-light-sensor 'none'; " +
+                        "autoplay 'none'; battery 'none';");
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
