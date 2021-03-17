@@ -1,7 +1,6 @@
 package hyve.petshow.service.port;
 
 import hyve.petshow.controller.filter.ServicoDetalhadoFilter;
-import hyve.petshow.controller.representation.MensagemRepresentation;
 import hyve.petshow.domain.ServicoDetalhado;
 import hyve.petshow.domain.ServicoDetalhadoTipoAnimalEstimacao;
 import hyve.petshow.exceptions.BusinessException;

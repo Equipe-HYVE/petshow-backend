@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import static java.util.UUID.randomUUID;
@@ -21,7 +22,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 	@Autowired
 	private JavaMailSender sender;
 	
-	
+	@Async
 	@Override
 	public void onApplicationEvent(OnRegistrationCompleteEvent event) {
 		this.confirmRegistration(event);
