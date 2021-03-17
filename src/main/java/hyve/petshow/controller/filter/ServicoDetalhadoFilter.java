@@ -3,7 +3,9 @@ package hyve.petshow.controller.filter;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import hyve.petshow.domain.TipoAnimalEstimacao;
 import hyve.petshow.domain.embeddables.Geolocalizacao;
 
 @Data
@@ -18,4 +20,5 @@ public class ServicoDetalhadoFilter {
     private Double metrosGeoloc = 600d;
     private String cidade;
     private String estado;
+    private List<TipoAnimalEstimacao> tiposAceitos;
 }

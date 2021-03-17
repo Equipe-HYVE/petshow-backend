@@ -39,13 +39,17 @@ public class ServicoDetalhadoSpecification {
             predicate = adicionaFiltroGeoloc(filtragem, root, builder, predicate, subQueryPrestador, prestador);
             predicate = adicionaFiltroPrecoMinimo(filtragem, root, builder, predicate, subQueryFiltrarPreco, subQueryTiposAnimaisAceitos);
             predicate = adicionaFiltroPrecoMaximo(filtragem, root, builder, predicate, subQueryFiltrarPreco, subQueryTiposAnimaisAceitos);
-
+            predicate = adicionarFiltroTiposAceitos(filtragem, root, builder, predicate, tiposAnimaisAceitos, subQueryTiposAnimaisAceitos);
+            
             adicionaOrdenacao(filtragem, root, query, builder, tiposAnimaisAceitos);
             query.distinct(true);
 
             return predicate;
         };
     }
+	
+	
+
 
 	private static void adicionaOrdenacao(ServicoDetalhadoFilter filtragem, Root<ServicoDetalhado> root, CriteriaQuery<?> query, CriteriaBuilder builder, Join<Object, Object> tiposAnimaisAceitos) {
         if(isNotNull(filtragem.getOrdenacao())){
@@ -92,6 +96,17 @@ public class ServicoDetalhadoSpecification {
         }
         return predicate;
     }
+    
+	private static Predicate adicionarFiltroTiposAceitos(ServicoDetalhadoFilter filtragem, Root<ServicoDetalhado> root,
+			CriteriaBuilder builder, Predicate predicate, Join<Object, Object> tiposAnimaisAceitos,
+			Root<ServicoDetalhadoTipoAnimalEstimacao> subQueryTiposAnimaisAceitos) {
+		if(isNotNull(filtragem.getTiposAceitos()) && !filtragem.getTiposAceitos().isEmpty()) {
+			predicate = builder.and(predicate, tiposAnimaisAceitos.get("tipoAnimalEstimacao").in(filtragem.getTiposAceitos()));
+		}
+		
+		return predicate;
+	}
+
 
     private static Predicate adicionaFiltroAvaliacao(ServicoDetalhadoFilter filtragem, Root<ServicoDetalhado> root,
                                                      CriteriaBuilder builder, Predicate predicate) {
